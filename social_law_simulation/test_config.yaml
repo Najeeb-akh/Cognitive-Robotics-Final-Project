@@ -1,0 +1,76 @@
+# Test configuration with minimal parameters for quick testing
+
+# Simulation parameters
+simulation:
+  duration_steps: 100           # Short test run
+  num_runs_per_config: 1        # Single run for testing
+  
+# Environment parameters
+environment:
+  highway:
+    lanes_count: 3              # Fewer lanes for faster setup
+    vehicles_count: 10          # Fewer vehicles for faster setup
+    initial_lane_id: null       
+    duration: 20                
+    
+  merge:
+    lanes_count: 2              # Fewer lanes for faster setup
+    vehicles_count: 8           # Fewer vehicles for faster setup
+    initial_lane_id: null       
+    duration: 20                
+
+# Agent composition configurations (only test one)
+compositions:
+  - name: "100% Selfish"
+    selfish_ratio: 1.0
+    cooperative_ratio: 0.0
+
+# Social law parameters (same as original)
+social_laws:
+  cooperative_merging:
+    enabled: true
+    deceleration_factor: 0.8    
+    detection_distance: 30.0    
+    
+  polite_yielding:
+    enabled: true
+    speed_reduction_factor: 0.9 
+    gap_creation_time: 2.0      
+    
+  phantom_jam_mitigation:
+    enabled: true
+    density_threshold: 40       
+    increased_time_headway: 2.0 
+    default_time_headway: 1.5   
+
+# Baseline policy parameters (same as original)
+baseline:
+  idm:
+    time_headway: 1.5           
+    max_acceleration: 3.0       
+    comfortable_deceleration: 3.0 
+    desired_velocity: 30.0      
+    minimum_spacing: 2.0        
+    
+  mobil:
+    politeness_factor: 0.1      
+    lane_change_threshold: 0.2  
+    max_safe_deceleration: 4.0  
+
+# Metrics collection (same as original)
+metrics:
+  safety:
+    ttc_threshold: 2.0          
+    collision_distance: 1.5     
+    
+  efficiency:
+    target_velocity: 30.0       
+    
+  stability:
+    acceleration_window: 100    
+
+# Output configuration
+output:
+  results_dir: "test_results"   
+  plots_dir: "test_plots"       
+  data_filename: "test_results.csv"

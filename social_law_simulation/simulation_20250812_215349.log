@@ -1,0 +1,23 @@
+2025-08-12 21:53:49,494 - INFO - Starting Decentralized Highway Traffic Simulation
+2025-08-12 21:53:49,496 - INFO - Configuration loaded from test_config.yaml
+2025-08-12 21:53:49,496 - INFO - Processing configuration 1/3: Highway_100_Selfish
+2025-08-12 21:53:49,496 - INFO - Running Highway_100_Selfish with 100% Selfish, 0% Cooperative - 1 runs
+2025-08-12 21:53:49,496 - INFO - Starting run 1/1
+2025-08-12 21:53:50,159 - INFO - Using 11 existing vehicles as agents
+2025-08-12 21:53:50,166 - INFO - Starting simulation with 11 agents for 100 steps
+2025-08-12 21:53:50,279 - INFO - Step 0/100 completed
+2025-08-12 21:53:52,205 - INFO - Simulation ended early at step 19
+2025-08-12 21:53:52,206 - INFO - Simulation completed successfully
+2025-08-12 21:53:52,206 - INFO - Run 1 completed - Avg Speed: 20.53, Collisions: 0
+2025-08-12 21:53:52,294 - INFO - Completed Highway_100_Selfish with 1 successful runs
+2025-08-12 21:53:52,294 - INFO - Processing configuration 2/3: Highway_100_Cooperative
+2025-08-12 21:53:52,294 - INFO - Processing configuration 3/3: Highway_50_50_Mix
+2025-08-12 21:53:52,294 - INFO - Generating final results and visualizations
+2025-08-12 21:53:52,305 - INFO - Results saved to test_results/test_results.csv
+2025-08-12 21:53:53,862 - INFO - Plots saved to test_plots
+2025-08-12 21:53:53,862 - INFO -   - test_plots/highway_average_speed.png
+2025-08-12 21:53:53,862 - INFO -   - test_plots/highway_collisions.png
+2025-08-12 21:53:53,862 - INFO -   - test_plots/highway_acceleration_stability.png
+2025-08-12 21:53:53,862 - INFO -   - test_plots/combined_efficiency_comparison.png
+2025-08-12 21:53:53,862 - INFO -   - test_plots/combined_safety_comparison.png
+2025-08-12 21:53:53,894 - INFO - Simulation study completed successfully

@@ -1,0 +1,22 @@
+2025-08-12 21:35:46,345 - INFO - Starting Decentralized Highway Traffic Simulation
+2025-08-12 21:35:46,347 - INFO - Configuration loaded from test_config.yaml
+2025-08-12 21:35:46,347 - INFO - Processing configuration 1/3: Highway_100_Selfish
+2025-08-12 21:35:46,347 - INFO - Running Highway_100_Selfish with 100% Selfish, 0% Cooperative - 1 runs
+2025-08-12 21:35:46,347 - INFO - Starting run 1/1
+2025-08-12 21:35:46,359 - ERROR - Error in run 1: 0
+2025-08-12 21:35:46,360 - ERROR - Traceback: Traceback (most recent call last):
+  File "/Users/shayvasilisky/Documents/Personal/TASP/Second Year/Semester B/רובוטים קוגניטיביים/Project CC_V2/social_law_simulation/src/main.py", line 139, in run_scenario_composition
+    agents = populate_environment_with_agents(env, composition, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/shayvasilisky/Documents/Personal/TASP/Second Year/Semester B/רובוטים קוגניטיביים/Project CC_V2/social_law_simulation/src/scenarios.py", line 169, in populate_environment_with_agents
+    lane_count = len(road.network.graph[list(road.network.graph.keys())[0]][0])
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+KeyError: 0
+
+2025-08-12 21:35:46,360 - INFO - Completed Highway_100_Selfish with 0 successful runs
+2025-08-12 21:35:46,360 - INFO - Processing configuration 2/3: Highway_100_Cooperative
+2025-08-12 21:35:46,360 - INFO - Processing configuration 3/3: Highway_50_50_Mix
+2025-08-12 21:35:46,360 - INFO - Generating final results and visualizations
+2025-08-12 21:35:46,366 - INFO - Results saved to test_results/test_results.csv
+2025-08-12 21:35:46,366 - INFO - Plots saved to test_plots
+2025-08-12 21:35:46,366 - INFO - Simulation study completed successfully

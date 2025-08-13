@@ -1,0 +1,105 @@
+2025-08-12 21:46:12,566 - INFO - Starting Decentralized Highway Traffic Simulation
+2025-08-12 21:46:12,569 - INFO - Configuration loaded from config.yaml
+2025-08-12 21:46:12,569 - INFO - Processing configuration 1/6: Highway_100_Selfish
+2025-08-12 21:46:12,569 - INFO - Running Highway_100_Selfish with 100% Selfish, 0% Cooperative - 5 runs
+2025-08-12 21:46:12,569 - INFO - Starting run 1/5
+2025-08-12 21:46:13,245 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:13,256 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:13,518 - INFO - Step 0/1000 completed
+2025-08-12 21:46:17,073 - INFO - Simulation ended early at step 14
+2025-08-12 21:46:17,073 - INFO - Simulation completed successfully
+2025-08-12 21:46:17,073 - INFO - Run 1 completed - Avg Speed: 20.53, Collisions: 0
+2025-08-12 21:46:17,179 - INFO - Starting run 2/5
+2025-08-12 21:46:17,257 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:17,267 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:17,525 - INFO - Step 0/1000 completed
+2025-08-12 21:46:23,707 - INFO - Simulation ended early at step 24
+2025-08-12 21:46:23,707 - INFO - Simulation completed successfully
+2025-08-12 21:46:23,707 - INFO - Run 2 completed - Avg Speed: 20.88, Collisions: 0
+2025-08-12 21:46:23,810 - INFO - Starting run 3/5
+2025-08-12 21:46:23,887 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:23,896 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:24,159 - INFO - Step 0/1000 completed
+2025-08-12 21:46:26,701 - INFO - Simulation ended early at step 10
+2025-08-12 21:46:26,701 - INFO - Simulation completed successfully
+2025-08-12 21:46:26,701 - INFO - Run 3 completed - Avg Speed: 20.44, Collisions: 0
+2025-08-12 21:46:26,807 - INFO - Starting run 4/5
+2025-08-12 21:46:26,884 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:26,895 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:27,153 - INFO - Step 0/1000 completed
+2025-08-12 21:46:33,823 - INFO - Simulation ended early at step 26
+2025-08-12 21:46:33,823 - INFO - Simulation completed successfully
+2025-08-12 21:46:33,823 - INFO - Run 4 completed - Avg Speed: 20.67, Collisions: 0
+2025-08-12 21:46:33,909 - INFO - Starting run 5/5
+2025-08-12 21:46:33,982 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:33,992 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:34,247 - INFO - Step 0/1000 completed
+2025-08-12 21:46:36,272 - INFO - Simulation ended early at step 8
+2025-08-12 21:46:36,272 - INFO - Simulation completed successfully
+2025-08-12 21:46:36,272 - INFO - Run 5 completed - Avg Speed: 20.73, Collisions: 0
+2025-08-12 21:46:36,377 - INFO - Completed Highway_100_Selfish with 5 successful runs
+2025-08-12 21:46:36,377 - INFO - Processing configuration 2/6: Highway_100_Cooperative
+2025-08-12 21:46:36,377 - INFO - Running Highway_100_Cooperative with 0% Selfish, 100% Cooperative - 5 runs
+2025-08-12 21:46:36,377 - INFO - Starting run 1/5
+2025-08-12 21:46:36,456 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:36,467 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:36,731 - INFO - Step 0/1000 completed
+2025-08-12 21:46:39,012 - INFO - Simulation ended early at step 9
+2025-08-12 21:46:39,012 - INFO - Simulation completed successfully
+2025-08-12 21:46:39,013 - INFO - Run 1 completed - Avg Speed: 20.48, Collisions: 0
+2025-08-12 21:46:39,118 - INFO - Starting run 2/5
+2025-08-12 21:46:39,203 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:39,214 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:39,473 - INFO - Step 0/1000 completed
+2025-08-12 21:46:40,232 - INFO - Simulation ended early at step 3
+2025-08-12 21:46:40,232 - INFO - Simulation completed successfully
+2025-08-12 21:46:40,232 - INFO - Run 2 completed - Avg Speed: 20.24, Collisions: 0
+2025-08-12 21:46:40,332 - INFO - Starting run 3/5
+2025-08-12 21:46:40,417 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:40,426 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:40,688 - INFO - Step 0/1000 completed
+2025-08-12 21:46:47,553 - INFO - Simulation ended early at step 27
+2025-08-12 21:46:47,553 - INFO - Simulation completed successfully
+2025-08-12 21:46:47,553 - INFO - Run 3 completed - Avg Speed: 20.72, Collisions: 0
+2025-08-12 21:46:47,662 - INFO - Starting run 4/5
+2025-08-12 21:46:47,741 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:47,751 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:48,009 - INFO - Step 0/1000 completed
+2025-08-12 21:46:55,100 - INFO - Simulation ended early at step 28
+2025-08-12 21:46:55,101 - INFO - Simulation completed successfully
+2025-08-12 21:46:55,101 - INFO - Run 4 completed - Avg Speed: 20.67, Collisions: 0
+2025-08-12 21:46:55,202 - INFO - Starting run 5/5
+2025-08-12 21:46:55,286 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:55,295 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:46:55,554 - INFO - Step 0/1000 completed
+2025-08-12 21:46:59,592 - INFO - Simulation ended early at step 16
+2025-08-12 21:46:59,592 - INFO - Simulation completed successfully
+2025-08-12 21:46:59,592 - INFO - Run 5 completed - Avg Speed: 20.51, Collisions: 0
+2025-08-12 21:46:59,681 - INFO - Completed Highway_100_Cooperative with 5 successful runs
+2025-08-12 21:46:59,681 - INFO - Processing configuration 3/6: Highway_50_50_Mix
+2025-08-12 21:46:59,681 - INFO - Running Highway_50_50_Mix with 50% Selfish, 50% Cooperative - 5 runs
+2025-08-12 21:46:59,681 - INFO - Starting run 1/5
+2025-08-12 21:46:59,751 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:46:59,760 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:47:00,019 - INFO - Step 0/1000 completed
+2025-08-12 21:47:07,624 - INFO - Simulation ended early at step 30
+2025-08-12 21:47:07,624 - INFO - Simulation completed successfully
+2025-08-12 21:47:07,624 - INFO - Run 1 completed - Avg Speed: 20.74, Collisions: 0
+2025-08-12 21:47:07,725 - INFO - Starting run 2/5
+2025-08-12 21:47:07,806 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:47:07,817 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:47:08,080 - INFO - Step 0/1000 completed
+2025-08-12 21:47:11,889 - INFO - Simulation ended early at step 15
+2025-08-12 21:47:11,889 - INFO - Simulation completed successfully
+2025-08-12 21:47:11,889 - INFO - Run 2 completed - Avg Speed: 20.42, Collisions: 0
+2025-08-12 21:47:11,992 - INFO - Starting run 3/5
+2025-08-12 21:47:12,072 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:47:12,083 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:47:12,342 - INFO - Step 0/1000 completed
+2025-08-12 21:47:14,146 - INFO - Simulation ended early at step 7
+2025-08-12 21:47:14,146 - INFO - Simulation completed successfully
+2025-08-12 21:47:14,146 - INFO - Run 3 completed - Avg Speed: 19.46, Collisions: 0
+2025-08-12 21:47:14,252 - INFO - Starting run 4/5
+2025-08-12 21:47:14,319 - INFO - Using 51 existing vehicles as agents
+2025-08-12 21:47:14,540 - INFO - Starting simulation with 51 agents for 1000 steps
+2025-08-12 21:47:14,849 - INFO - Step 0/1000 completed

@@ -1,0 +1,6 @@
+2025-08-12 22:54:46,499 - INFO - Starting Decentralized Highway Traffic Simulation
+2025-08-12 22:54:46,502 - INFO - Configuration loaded from config.yaml
+2025-08-12 22:54:46,502 - INFO - Generating final results and visualizations
+2025-08-12 22:54:46,508 - INFO - Results saved to results/results.csv
+2025-08-12 22:54:46,509 - INFO - Plots saved to plots
+2025-08-12 22:54:46,509 - INFO - Simulation study completed successfully

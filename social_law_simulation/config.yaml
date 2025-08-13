@@ -1,0 +1,91 @@
+# Configuration file for Decentralized Highway Traffic Simulation
+
+# Simulation parameters
+simulation:
+  duration_steps: 1000          # Number of simulation steps per run
+  num_runs_per_config: 5        # Number of runs to average over
+  
+# Environment parameters
+environment:
+  highway:
+    lanes_count: 4              # Number of lanes for highway scenario
+    vehicles_count: 50          # Initial number of vehicles
+    initial_lane_id: null       # Let vehicles spawn in random lanes
+    duration: 40                # Continuous vehicle spawning duration
+    
+  merge:
+    lanes_count: 3              # Number of lanes for merge scenario
+    vehicles_count: 40          # Initial number of vehicles
+    initial_lane_id: null       # Let vehicles spawn in random lanes
+    duration: 40                # Continuous vehicle spawning duration
+    
+# Agent composition configurations
+compositions:
+  - name: "100% Selfish"
+    selfish_ratio: 1.0
+    cooperative_ratio: 0.0
+    
+  - name: "100% Cooperative"
+    selfish_ratio: 0.0
+    cooperative_ratio: 1.0
+    
+  - name: "50/50 Mix"
+    selfish_ratio: 0.5
+    cooperative_ratio: 0.5
+
+# Social law parameters
+social_laws:
+  cooperative_merging:
+    enabled: true
+    deceleration_factor: 0.8    # Factor to reduce speed when helping mergers
+    detection_distance: 30.0    # Distance to detect merging vehicles (meters)
+    
+  polite_yielding:
+    enabled: true
+    speed_reduction_factor: 0.9 # Factor to reduce speed for lane changers
+    gap_creation_time: 2.0      # Time to maintain gap (seconds)
+    
+  phantom_jam_mitigation:
+    enabled: true
+    density_threshold: 40       # vehicles/km/lane to trigger behavior
+    increased_time_headway: 2.0 # Increased T parameter for IDM (default ~1.5s)
+    default_time_headway: 1.5   # Default T parameter for IDM
+
+# Baseline policy parameters
+baseline:
+  idm:
+    time_headway: 1.5           # T parameter in IDM (seconds)
+    max_acceleration: 3.0       # Maximum acceleration (m/s²)
+    comfortable_deceleration: 3.0 # Comfortable deceleration (m/s²)
+    desired_velocity: 30.0      # Desired velocity (m/s)
+    minimum_spacing: 2.0        # Minimum spacing (meters)
+    
+  mobil:
+    politeness_factor: 0.1      # Politeness factor for lane changing
+    lane_change_threshold: 0.2  # Threshold for lane change benefit
+    max_safe_deceleration: 4.0  # Maximum safe deceleration for others
+
+# Metrics collection
+metrics:
+  safety:
+    ttc_threshold: 2.0          # Time-to-collision threshold (seconds)
+    collision_distance: 1.5     # Distance threshold for collision (meters)
+    
+  efficiency:
+    target_velocity: 30.0       # Target velocity for efficiency calculation
+    
+  stability:
+    acceleration_window: 100    # Window size for acceleration std dev calculation
+
+# Output configuration
+output:
+  results_dir: "results"        # Directory to save results
+  plots_dir: "plots"            # Directory to save plots
+  data_filename: "results.csv"  # Filename for aggregated results
+
+# Visualization configuration
+visualization:
+  fps: 20                       # Frames per second for real-time rendering
+  window_size: [1200, 400]      # Window size [width, height] for rendering
+  show_agent_info: true         # Show agent information in visualization
+  highlight_cooperative: true   # Highlight cooperative agents differently

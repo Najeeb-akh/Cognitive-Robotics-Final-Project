@@ -1,0 +1,3 @@
+2025-08-13 14:25:14,048 - INFO - Starting Decentralized Highway Traffic Simulation
+2025-08-13 14:25:14,048 - ERROR - Failed to load config from config.yaml: [Errno 2] No such file or directory: 'config.yaml'
+2025-08-13 14:25:14,048 - ERROR - Fatal error: [Errno 2] No such file or directory: 'config.yaml'

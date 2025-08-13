@@ -1,0 +1,2 @@
+scenario,composition,avg_speed_mean,avg_speed_std,total_collisions_mean,total_collisions_std,acceleration_std_mean,acceleration_std_std,merge_success_rate_mean,merge_success_rate_std,ttc_events_count_mean,ttc_events_count_std,throughput_mean,throughput_std
+Merge,"0% Selfish, 100% Cooperative",20.989,,0.0,,0.0,,0.0,,2.0,,0.0,
