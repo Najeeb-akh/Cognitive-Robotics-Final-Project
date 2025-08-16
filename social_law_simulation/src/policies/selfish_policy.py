@@ -269,12 +269,13 @@ class SelfishPolicy:
         
         return self._calculate_lane_utility(front_vehicle, ego_info)
     
-    def _is_lane_change_safe_from_obs(self, vehicles):
+    def _is_lane_change_safe_from_obs(self, vehicles, ego_info=None):
         """
         Check if lane change is safe based on vehicles in target lane.
         
         Args:
             vehicles: List of vehicles in target lane
+            ego_info: Ego vehicle information (optional, not used in selfish policy)
             
         Returns:
             bool: True if safe, False otherwise

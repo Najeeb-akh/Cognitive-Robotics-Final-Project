@@ -55,7 +55,7 @@ def create_highway_scenario(config, render_mode='rgb_array'):
         "vehicles_count": env_config.get('vehicles_count', 50),
         "controlled_vehicles": 1,
         "initial_lane_id": env_config.get('initial_lane_id', None),
-        "duration": env_config.get('duration', 40),
+        "duration": env_config.get('duration', 200),  # Increased from 40 to allow longer episodes
         "ego_spacing": 2,
         "vehicles_density": 1,
         "collision_reward": -1,
@@ -114,7 +114,7 @@ def create_merge_scenario(config, render_mode='rgb_array'):
         "vehicles_count": env_config.get('vehicles_count', 40),
         "controlled_vehicles": 1,
         "initial_lane_id": env_config.get('initial_lane_id', None),
-        "duration": env_config.get('duration', 40),
+        "duration": env_config.get('duration', 200),  # Increased from 40 to allow longer episodes
         "ego_spacing": 2,
         "vehicles_density": 1,
         "collision_reward": -1,
@@ -126,7 +126,13 @@ def create_merge_scenario(config, render_mode='rgb_array'):
         "offroad_terminal": False,
         "terminate_on_collision": False,
         "merging_lane_spawn_probability": 0.2,  # Probability of spawning in merge lane
-        "merging_speed_ratio": 0.8  # Speed ratio for merging vehicles
+        "merging_speed_ratio": 0.8,  # Speed ratio for merging vehicles
+        "simulation_frequency": 15,  # Lower frequency to allow longer episodes
+        "policy_frequency": 3,  # Reduce policy calls frequency
+        "screen_width": 600,
+        "screen_height": 150,
+        "centering_position": [0.3, 0.5],
+        "real_time_rendering": False
     }
     
     # Create environment and configure it

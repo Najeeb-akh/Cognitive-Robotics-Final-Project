@@ -1,9 +1,0 @@
-2025-08-12 21:48:42,955 - INFO - Starting Decentralized Highway Traffic Simulation
-2025-08-12 21:48:42,958 - INFO - Configuration loaded from config.yaml
-2025-08-12 21:48:42,958 - INFO - Processing configuration 1/3: Merge_100_Selfish
-2025-08-12 21:48:42,958 - INFO - Processing configuration 2/3: Merge_100_Cooperative
-2025-08-12 21:48:42,958 - INFO - Processing configuration 3/3: Merge_50_50_Mix
-2025-08-12 21:48:42,958 - INFO - Generating final results and visualizations
-2025-08-12 21:48:42,964 - INFO - Results saved to results/results.csv
-2025-08-12 21:48:42,965 - INFO - Plots saved to plots
-2025-08-12 21:48:42,965 - INFO - Simulation study completed successfully

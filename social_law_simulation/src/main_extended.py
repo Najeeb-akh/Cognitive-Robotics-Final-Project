@@ -1,8 +1,9 @@
 """
-Main Simulation Runner
+Extended Main Simulation Runner
 
-This script orchestrates the entire simulation study according to the SRS requirements.
-It runs all scenario/composition combinations, collects metrics, and generates reports.
+This script extends the original main.py to support the new intersection, 
+roundabout, and racetrack scenarios while preserving all original functionality.
+Uses the extended scenarios, policies, and configurations.
 """
 
 import os
@@ -10,17 +11,24 @@ import sys
 import yaml
 import argparse
 import logging
-import numpy as np
 from datetime import datetime
 
 # Add src directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from scenarios import get_scenario_configurations
+# Import extended components
+from scenarios_extended import (get_extended_scenario_configurations, 
+                               get_original_scenarios_only, 
+                               get_new_scenarios_only)
 from metrics import MetricsCollector, MetricsAggregator
 from visualization import generate_comparison_plots
+
+# Import original and extended policies
 from policies.selfish_policy import SelfishPolicy
 from policies.cooperative_policy import CooperativePolicy
+from policies.intersection_policy import IntersectionCooperativePolicy, IntersectionSelfishPolicy
+from policies.roundabout_policy import RoundaboutCooperativePolicy, RoundaboutSelfishPolicy
+from policies.racetrack_policy import RacetrackCooperativePolicy, RacetrackSelfishPolicy
 
 
 def load_config(config_path):
@@ -28,7 +36,7 @@ def load_config(config_path):
     Load configuration from YAML file.
     
     Args:
-        config_path (str): Path to config.yaml file
+        config_path (str): Path to config file
         
     Returns:
         dict: Configuration dictionary
@@ -49,38 +57,86 @@ def setup_logging(log_level='INFO'):
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler(f'simulation_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
+            logging.FileHandler(f'simulation_extended_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
         ]
     )
 
 
-def create_agent_policy(agent_composition, config):
+def detect_scenario_type(scenario_name):
     """
-    Create agent policy based on composition ratio.
+    Detect scenario type from scenario name.
+    
+    Args:
+        scenario_name (str): Name of the scenario
+        
+    Returns:
+        str: Scenario type ('highway', 'merge', 'intersection', 'roundabout', 'racetrack')
+    """
+    scenario_name_lower = scenario_name.lower()
+    
+    if 'intersection' in scenario_name_lower:
+        return 'intersection'
+    elif 'roundabout' in scenario_name_lower:
+        return 'roundabout'
+    elif 'racetrack' in scenario_name_lower:
+        return 'racetrack'
+    elif 'merge' in scenario_name_lower:
+        return 'merge'
+    elif 'highway' in scenario_name_lower:
+        return 'highway'
+    else:
+        return 'highway'  # Default fallback
+
+
+def create_agent_policy(agent_composition, config, scenario_type='highway'):
+    """
+    Create agent policy based on composition ratio and scenario type.
     
     Args:
         agent_composition (dict): Dict with 'selfish_ratio' and 'cooperative_ratio'
         config (dict): Configuration dictionary
+        scenario_type (str): Type of scenario for specialized policies
         
     Returns:
-        Policy instance (SelfishPolicy or CooperativePolicy)
+        Policy instance
     """
     selfish_ratio = agent_composition.get('selfish_ratio', 0.5)
     
     if selfish_ratio > 0.5:
-        # Create selfish policy
-        policy = SelfishPolicy(config=config)
-        logging.info("Created SelfishPolicy for ego vehicle")
+        # Create scenario-specific selfish policy
+        if scenario_type == 'intersection':
+            policy = IntersectionSelfishPolicy(config=config)
+            logging.info("Created IntersectionSelfishPolicy for ego vehicle")
+        elif scenario_type == 'roundabout':
+            policy = RoundaboutSelfishPolicy(config=config)
+            logging.info("Created RoundaboutSelfishPolicy for ego vehicle")
+        elif scenario_type == 'racetrack':
+            policy = RacetrackSelfishPolicy(config=config)
+            logging.info("Created RacetrackSelfishPolicy for ego vehicle")
+        else:
+            # Original scenarios use original policy
+            policy = SelfishPolicy(config=config)
+            logging.info("Created SelfishPolicy for ego vehicle")
     else:
-        # Create cooperative policy
-        policy = CooperativePolicy(config=config)
-        logging.info("Created CooperativePolicy for ego vehicle")
+        # Create scenario-specific cooperative policy
+        if scenario_type == 'intersection':
+            policy = IntersectionCooperativePolicy(config=config)
+            logging.info("Created IntersectionCooperativePolicy for ego vehicle")
+        elif scenario_type == 'roundabout':
+            policy = RoundaboutCooperativePolicy(config=config)
+            logging.info("Created RoundaboutCooperativePolicy for ego vehicle")
+        elif scenario_type == 'racetrack':
+            policy = RacetrackCooperativePolicy(config=config)
+            logging.info("Created RacetrackCooperativePolicy for ego vehicle")
+        else:
+            # Original scenarios use original policy
+            policy = CooperativePolicy(config=config)
+            logging.info("Created CooperativePolicy for ego vehicle")
     
     return policy
 
 
-def run_single_simulation(env, agent_policy, config, metrics_collector, render=False, 
-                          stop_event=None, pause_event=None, progress_cb=None):
+def run_single_simulation(env, agent_policy, config, metrics_collector, render=False):
     """
     Run a single simulation with specified environment and agent policy.
     
@@ -105,20 +161,6 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
     
     try:
         for step in range(duration_steps):
-            # Check for stop event
-            if stop_event and stop_event.is_set():
-                logging.info(f"Simulation stopped by user at step {step}")
-                break
-            
-            # Check for pause event
-            if pause_event and pause_event.is_set():
-                import time
-                while pause_event.is_set() and not (stop_event and stop_event.is_set()):
-                    time.sleep(0.05)  # Small sleep while paused
-                if stop_event and stop_event.is_set():
-                    logging.info(f"Simulation stopped while paused at step {step}")
-                    break
-            
             # Get action from agent policy if available, otherwise use default
             if agent_policy:
                 action = agent_policy.act(obs)
@@ -136,22 +178,12 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
                 fps = config.get('visualization', {}).get('fps', 20)
                 time.sleep(1.0 / fps)  # Dynamic delay based on FPS setting
             
-            # Collect metrics for this step (pass info per plan)
+            # Collect metrics for this step with info
             metrics_collector.collect_step_metrics(env, step, info)
-            
-            # Emit progress updates periodically
-            if progress_cb and step % 50 == 0:
-                partial_metrics = {
-                    'avg_speed_so_far': float(np.mean(metrics_collector.speed_history)) if hasattr(metrics_collector, 'speed_history') and metrics_collector.speed_history else 0.0,
-                    'total_collisions_so_far': int(getattr(metrics_collector, 'collisions', 0))
-                }
-                progress_cb(step, duration_steps, partial_metrics)
             
             # Check if simulation should end early
             if terminated or truncated:
-                logging.info(f"Simulation ended early at step {step} - terminated: {terminated}, truncated: {truncated}")
-                if info:
-                    logging.info(f"Info: {info}")
+                logging.info(f"Simulation ended early at step {step}")
                 break
             
             # Log progress periodically
@@ -169,8 +201,7 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
     return final_metrics
 
 
-def run_scenario_composition(scenario_name, scenario_func, composition, config, render_args=None,
-                           stop_event=None, pause_event=None, progress_cb=None):
+def run_scenario_composition(scenario_name, scenario_func, composition, config, render_args=None):
     """
     Run multiple simulation runs for a specific scenario and agent composition.
     
@@ -189,6 +220,9 @@ def run_scenario_composition(scenario_name, scenario_func, composition, config, 
     
     logging.info(f"Running {scenario_name} with {composition_name} - {num_runs} runs")
     
+    # Detect scenario type for specialized policies
+    scenario_type = detect_scenario_type(scenario_name)
+    
     run_metrics = []
     
     for run_idx in range(num_runs):
@@ -205,28 +239,37 @@ def run_scenario_composition(scenario_name, scenario_func, composition, config, 
             # Create environment with appropriate render mode
             env = scenario_func(config, render_mode=render_mode)
             
-            # Create agent policy
-            agent_policy = create_agent_policy(composition, config)
+            # Create agent policy with scenario-specific specialization
+            agent_policy = create_agent_policy(composition, config, scenario_type)
             
             # Create metrics collector
             metrics_collector = MetricsCollector(config)
             
             # Display rendering instructions if this is the first run with rendering
             if render_enabled and run_idx == 0:
-                print("\n" + "="*60)
-                print("🚗 REAL-TIME SIMULATION VISUALIZATION ACTIVE")
-                print("="*60)
-                print("• Watch the vehicles interact in real-time!")
+                print("\n" + "="*80)
+                print(f"🚗 EXTENDED SIMULATION VISUALIZATION - {scenario_name.upper()}")
+                print("="*80)
+                if scenario_type == 'intersection':
+                    print("• Watch multi-directional traffic coordination!")
+                    print("• Observe turn-taking and gap provision behaviors")
+                elif scenario_type == 'roundabout':
+                    print("• Watch circular traffic flow and entry coordination!")
+                    print("• Observe entry facilitation and exit courtesy")
+                elif scenario_type == 'racetrack':
+                    print("• Watch high-speed racing and overtaking coordination!")
+                    print("• Observe slipstream cooperation and defensive positioning")
+                else:
+                    print("• Watch the original scenario with enhanced social laws!")
                 print("• Blue vehicles: Default highway-env agents")
                 print("• Red vehicle: Ego vehicle (controlled)")
-                print("• Green: Target lane/merge areas")
+                print("• Green: Target areas/zones")
                 print("• Close the visualization window to stop simulation")
                 print("• Press ESC or Q in the window to exit early")
-                print("="*60)
+                print("="*80)
                 
             # Run simulation with rendering if enabled
-            metrics = run_single_simulation(env, agent_policy, config, metrics_collector, render=render_enabled,
-                                          stop_event=stop_event, pause_event=pause_event, progress_cb=progress_cb)
+            metrics = run_single_simulation(env, agent_policy, config, metrics_collector, render=render_enabled)
             run_metrics.append(metrics)
             
             logging.info(f"Run {run_idx + 1} completed - Avg Speed: {metrics.get('avg_speed', 0):.2f}, Collisions: {metrics.get('total_collisions', 0)}")

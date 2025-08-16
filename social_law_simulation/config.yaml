@@ -11,13 +11,41 @@ environment:
     lanes_count: 4              # Number of lanes for highway scenario
     vehicles_count: 50          # Initial number of vehicles
     initial_lane_id: null       # Let vehicles spawn in random lanes
-    duration: 40                # Continuous vehicle spawning duration
+    duration: 200               # Continuous vehicle spawning duration (increased for longer episodes)
     
   merge:
     lanes_count: 3              # Number of lanes for merge scenario
     vehicles_count: 40          # Initial number of vehicles
     initial_lane_id: null       # Let vehicles spawn in random lanes
-    duration: 40                # Continuous vehicle spawning duration
+    duration: 200               # Continuous vehicle spawning duration (increased for longer episodes)
+    
+  intersection:
+    vehicles_count: 60          # Higher vehicle count for intersection complexity
+    duration: 50                # Longer episodes for complex interactions
+    intersection_size: 20       # Size of intersection area
+    traffic_light_timing: 30    # Traffic light cycle time (seconds)
+    approach_speed_limit: 50    # Speed limit approaching intersection
+    turn_lane_length: 50        # Length of turn lanes
+    
+  roundabout:
+    lane_count: 2               # Number of lanes (inner/outer)
+    vehicles_count: 45          # Vehicle count for roundabout
+    duration: 45                # Episode duration
+    radius: 50                  # Roundabout radius
+    entry_points: 4             # Number of entry/exit points
+    entry_yield_distance: 20    # Distance to yield before entry
+    circulating_speed_limit: 25 # Speed limit inside roundabout
+    entry_acceleration_lane: 15 # Length of acceleration lane
+    
+  racetrack:
+    lane_count: 3               # Number of racing lanes
+    vehicles_count: 25          # Lower density for high speeds
+    duration: 60                # Longer for racing dynamics
+    speed_limit: 120            # High speed limit for racetrack
+    track_length: 2000          # Total track length
+    corner_count: 4             # Number of corners/turns
+    straight_length: 400        # Length of straight sections
+    slipstream_effect: true     # Enable drafting/slipstream effects
     
 # Agent composition configurations
 compositions:

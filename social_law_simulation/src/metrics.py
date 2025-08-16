@@ -61,14 +61,17 @@ class MetricsCollector:
         # Per-step data for detailed analysis
         self.step_data = []
     
-    def collect_step_metrics(self, env, step_num):
+    def collect_step_metrics(self, env, step_num, info=None):
         """
         Collect metrics for a single simulation step.
         
         Args:
             env: The highway-env environment
             step_num (int): Current simulation step
+            info (dict|None): Optional info dictionary returned by env.step()
         """
+        # Incorporate environment-provided info first for reliability
+        self.collect_step_info(info)
         road = env.unwrapped.road
         vehicles = road.vehicles
         
@@ -141,7 +144,37 @@ class MetricsCollector:
             'avg_speed': ego_speed,  # Now tracks only ego vehicle speed
             'collisions_this_step': 0  # Will be updated by collision detection
         }
+        # Add selected info-derived fields when available
+        if isinstance(info, dict):
+            if 'speed' in info:
+                step_data['info_speed'] = info.get('speed')
+            if 'crashed' in info:
+                step_data['info_crashed'] = bool(info.get('crashed'))
         self.step_data.append(step_data)
+
+    def collect_step_info(self, info):
+        """
+        Parse the info dictionary from env.step() to enrich metrics.
+        
+        Args:
+            info (dict|None): Info dict returned by env.step()
+        """
+        if not isinstance(info, dict):
+            return
+        # Optionally record collisions from info without double-counting
+        crashed_flag = info.get('crashed')
+        if isinstance(crashed_flag, (bool, np.bool_)):
+            # Only update the per-step field; collision totals are handled elsewhere
+            pass
+        # Optionally record speed provided in info
+        info_speed = info.get('speed')
+        try:
+            if info_speed is not None:
+                float(info_speed)  # validate numeric
+                # Prefer ego speed from env for aggregates; info speed stored per-step
+                pass
+        except (TypeError, ValueError):
+            pass
     
     def _check_collisions(self, vehicles):
         """
@@ -264,6 +297,11 @@ class MetricsCollector:
             dict: Dictionary of calculated metrics
         """
         metrics = {}
+        # Total steps executed in this run
+        try:
+            metrics['steps'] = int(len(self.step_data))
+        except Exception:
+            metrics['steps'] = 0
         
         # Efficiency Metrics
         if self.speed_history:

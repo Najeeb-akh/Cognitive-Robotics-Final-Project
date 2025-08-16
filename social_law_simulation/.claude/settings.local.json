@@ -1,9 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(python:*)",
+      "Bash(timeout 15s python -m src:*)",
+      "Bash(mkdir:*)",
+      "Bash(timeout:*)",
+      "WebFetch(domain:highway-env.farama.org)",
+      "WebSearch"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "/Users/shayvasilisky/Documents/Personal/TASP/Second Year/Semester B/רובוטים קוגניטיביים/Project CC_V2"
+    ]
   }
 }

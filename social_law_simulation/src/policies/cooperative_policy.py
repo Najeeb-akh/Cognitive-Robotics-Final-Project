@@ -139,34 +139,6 @@ class CooperativePolicy(SelfishPolicy):
         
         return None
     
-    def _is_merge_space_insufficient_from_obs(self, merging_vehicle, front_vehicle, ego_info):
-        """
-        Determine if there's insufficient space for the merging vehicle.
-        
-        Args:
-            merging_vehicle: Merging vehicle observation
-            front_vehicle: Front vehicle observation or None
-            ego_info: Ego vehicle information
-            
-        Returns:
-            bool: True if space is insufficient for safe merge
-        """
-        if front_vehicle is None:
-            return False  # Plenty of space if no vehicle ahead
-            
-        # Calculate available space between ego and front vehicle
-        available_space = abs(front_vehicle[1])  # Distance to front vehicle
-        
-        # Estimate space needed for safe merge
-        merge_speed = abs(merging_vehicle[3])  # Speed of merging vehicle
-        ego_speed = abs(ego_info[3])  # Ego speed
-        
-        safe_merge_space = (
-            self.MINIMUM_SPACING * 2 +  # Safety buffers
-            max(merge_speed, ego_speed) * self.TIME_HEADWAY * 1.5  # Extra time for merge maneuver
-        )
-        
-        return available_space < safe_merge_space
     
     def _check_polite_yielding_from_obs(self, obs):
         """
@@ -290,6 +262,124 @@ class CooperativePolicy(SelfishPolicy):
         density = vehicles_in_range / area_km if area_km > 0 else 0
         
         return density
+    
+    def _is_lane_change_safe_from_obs(self, vehicles, ego_info=None):
+        """
+        Check if lane change is safe based on vehicles in target lane.
+        Uses time-based safety calculations instead of distance-only.
+        Overrides the base class method with improved safety logic.
+        
+        Args:
+            vehicles: List of vehicles in target lane
+            ego_info: Ego vehicle information (optional, uses last observed ego state if None)
+            
+        Returns:
+            bool: True if safe, False otherwise
+        """
+        min_safe_time = 3.0  # Minimum safe time-to-collision in seconds
+        min_safe_distance = 10.0  # Fallback minimum distance in meters
+        
+        # Get ego vehicle speed for relative calculations
+        ego_speed = 20.0  # Default fallback speed
+        if ego_info is not None and len(ego_info) > 3:
+            ego_speed = abs(ego_info[3])
+        
+        for vehicle in vehicles:
+            distance = abs(vehicle[1])  # Distance to vehicle
+            vehicle_speed = abs(vehicle[3]) if len(vehicle) > 3 else 20.0
+            
+            # Check minimum distance first
+            if distance < min_safe_distance:
+                return False
+            
+            # Calculate time-to-collision if vehicles are approaching
+            relative_speed = abs(vehicle_speed - ego_speed)
+            if relative_speed > 1.0:  # Only if significant speed difference
+                time_to_collision = distance / relative_speed
+                if time_to_collision < min_safe_time:
+                    return False
+        
+        return True
+    
+    def _is_merge_space_insufficient_from_obs(self, merging_vehicle, front_vehicle, ego_info):
+        """
+        Determine if there's insufficient space for the merging vehicle.
+        Uses improved calculations considering relative velocities.
+        Overrides the base class method with enhanced merge logic.
+        
+        Args:
+            merging_vehicle: Merging vehicle observation
+            front_vehicle: Front vehicle observation or None
+            ego_info: Ego vehicle information
+            
+        Returns:
+            bool: True if space is insufficient for safe merge
+        """
+        if front_vehicle is None:
+            return False  # Plenty of space if no vehicle ahead
+            
+        # Calculate available space between ego and front vehicle
+        available_space = abs(front_vehicle[1])  # Distance to front vehicle
+        
+        # Get vehicle speeds with fallbacks
+        merge_speed = abs(merging_vehicle[3]) if len(merging_vehicle) > 3 else 20.0
+        ego_speed = abs(ego_info[3]) if len(ego_info) > 3 else 20.0
+        front_speed = abs(front_vehicle[3]) if len(front_vehicle) > 3 else 20.0
+        
+        # Calculate time-based safety requirements
+        merge_time_required = 3.0  # Seconds needed for safe merge
+        
+        # Calculate required space considering merge dynamics
+        base_spacing = self.MINIMUM_SPACING * 2  # Safety buffers
+        merge_distance = merge_speed * merge_time_required  # Distance merging vehicle travels
+        
+        # Add buffer for relative velocity differences
+        velocity_buffer = abs(merge_speed - ego_speed) * self.TIME_HEADWAY
+        
+        safe_merge_space = base_spacing + merge_distance + velocity_buffer
+        
+        return available_space < safe_merge_space
+    
+    def _mobil_lane_change_from_obs(self, obs):
+        """
+        Determine if a lane change is beneficial using observation-based MOBIL model.
+        Overrides base class method to use improved safety checks with ego_info.
+        
+        Args:
+            obs: Highway-env observation array
+            
+        Returns:
+            int: -1 for left lane change, 1 for right, 0 for stay
+        """
+        if len(obs) < 2:
+            return 0  # No other vehicles visible, stay in lane
+            
+        # Analyze current lane situation
+        current_front = self._find_front_vehicle_from_obs(obs)
+        current_utility = self._calculate_lane_utility(current_front, obs[0])
+        
+        # Check left lane change opportunity
+        left_vehicles = self._find_vehicles_in_adjacent_lane(obs, -1)  # Left
+        left_utility = self._calculate_adjacent_lane_utility(left_vehicles, obs[0])
+        
+        # Check right lane change opportunity  
+        right_vehicles = self._find_vehicles_in_adjacent_lane(obs, 1)  # Right
+        right_utility = self._calculate_adjacent_lane_utility(right_vehicles, obs[0])
+        
+        # Simple lane change decision based on utility difference
+        left_benefit = left_utility - current_utility
+        right_benefit = right_utility - current_utility
+        
+        # Make lane changes more conservative by increasing threshold
+        higher_threshold = self.LANE_CHANGE_THRESHOLD * 2.0  # More conservative threshold
+        
+        # Check if lane change is safe and beneficial (pass ego_info to improved safety check)
+        if left_benefit > higher_threshold and self._is_lane_change_safe_from_obs(left_vehicles, obs[0]):
+            return -1
+        elif right_benefit > higher_threshold and self._is_lane_change_safe_from_obs(right_vehicles, obs[0]):
+            return 1
+        
+        return 0  # Stay in current lane
 
 
 # Compatibility alias for existing code
