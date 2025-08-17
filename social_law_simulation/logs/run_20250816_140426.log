@@ -1,0 +1,3 @@
+2025-08-16 14:04:26,241 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-16 14:04:26,247 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-16 14:04:26,421 - INFO - Step 0/1000 completed

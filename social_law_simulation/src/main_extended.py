@@ -1,9 +1,8 @@
 """
-Extended Main Simulation Runner
+Extended Main Simulation Runner (DEPRECATED)
 
-This script extends the original main.py to support the new intersection, 
-roundabout, and racetrack scenarios while preserving all original functionality.
-Uses the extended scenarios, policies, and configurations.
+This module now only exposes importable runner functions for compatibility.
+Use `run_simulation.py` as the single entry point.
 """
 
 import os
@@ -12,6 +11,7 @@ import yaml
 import argparse
 import logging
 from datetime import datetime
+import warnings
 
 # Add src directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -50,14 +50,24 @@ def load_config(config_path):
         raise
 
 
-def setup_logging(log_level='INFO'):
-    """Setup logging configuration."""
+def setup_logging(log_level='INFO', logs_dir='logs'):
+    """Setup logging configuration (deprecated module)."""
+    warnings.warn(
+        "src/main_extended.py setup_logging is deprecated; use run_simulation.py entry point",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if not os.path.isabs(logs_dir):
+        logs_dir = os.path.join(project_root, logs_dir)
+    os.makedirs(logs_dir, exist_ok=True)
+    log_path = os.path.join(logs_dir, f'simulation_extended_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler(f'simulation_extended_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
+            logging.FileHandler(log_path)
         ]
     )
 
@@ -100,6 +110,11 @@ def create_agent_policy(agent_composition, config, scenario_type='highway'):
     Returns:
         Policy instance
     """
+    warnings.warn(
+        "src/main_extended.py create_agent_policy is deprecated; use run_simulation.py entry point",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     selfish_ratio = agent_composition.get('selfish_ratio', 0.5)
     
     if selfish_ratio > 0.5:
@@ -150,6 +165,11 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
     Returns:
         dict: Metrics from the simulation run
     """
+    warnings.warn(
+        "src/main_extended.py run_single_simulation is deprecated; use run_simulation.py entry point",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     duration_steps = config.get('simulation', {}).get('duration_steps', 1000)
     
     # Reset environment and metrics

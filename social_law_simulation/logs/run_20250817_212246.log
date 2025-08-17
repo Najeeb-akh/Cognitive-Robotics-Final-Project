@@ -1,0 +1,89 @@
+2025-08-17 21:22:46,641 - INFO - Created SelfishPolicy for ego vehicle
+2025-08-17 21:22:46,648 - INFO - Starting simulation with SelfishPolicy for 1000 steps
+2025-08-17 21:22:46,821 - INFO - Step 0/1000 completed
+2025-08-17 21:23:20,649 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-17 21:23:20,649 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': 0.0, 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-17 21:23:20,649 - INFO - Simulation completed successfully
+2025-08-17 21:23:20,656 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-17 21:23:20,662 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-17 21:23:20,841 - INFO - Step 0/1000 completed
+2025-08-17 21:23:54,578 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-17 21:23:54,579 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': 0.6666666666666666, 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-17 21:23:54,579 - INFO - Simulation completed successfully
+2025-08-17 21:23:54,586 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-17 21:23:54,592 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-17 21:23:54,777 - INFO - Step 0/1000 completed
+2025-08-17 21:24:29,027 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-17 21:24:29,027 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': 0.0, 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-17 21:24:29,027 - INFO - Simulation completed successfully
+2025-08-17 21:24:29,030 - INFO - Created SelfishPolicy for ego vehicle
+2025-08-17 21:24:29,033 - INFO - Starting simulation with SelfishPolicy for 1000 steps
+2025-08-17 21:24:29,037 - INFO - Step 0/1000 completed
+2025-08-17 21:24:29,264 - INFO - Simulation ended early at step 49 - terminated: True, truncated: False
+2025-08-17 21:24:29,264 - INFO - Info: {'speed': 20.00000000000346, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': False, 'right_lane_reward': 1.0, 'high_speed_reward': 3.460343123151688e-13, 'lane_change_reward': False, 'merging_speed_reward': 0}}
+2025-08-17 21:24:29,264 - INFO - Simulation completed successfully
+2025-08-17 21:24:29,267 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-17 21:24:29,270 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-17 21:24:29,274 - INFO - Step 0/1000 completed
+2025-08-17 21:24:29,495 - INFO - Simulation ended early at step 49 - terminated: True, truncated: False
+2025-08-17 21:24:29,495 - INFO - Info: {'speed': 20.00000000000346, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': False, 'right_lane_reward': 1.0, 'high_speed_reward': 3.460343123151688e-13, 'lane_change_reward': False, 'merging_speed_reward': 1.0095744780379499}}
+2025-08-17 21:24:29,495 - INFO - Simulation completed successfully
+2025-08-17 21:24:29,498 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-17 21:24:29,501 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-17 21:24:29,506 - INFO - Step 0/1000 completed
+2025-08-17 21:24:29,728 - INFO - Simulation ended early at step 49 - terminated: True, truncated: False
+2025-08-17 21:24:29,728 - INFO - Info: {'speed': 20.00000000000346, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': False, 'right_lane_reward': 1.0, 'high_speed_reward': 3.460343123151688e-13, 'lane_change_reward': False, 'merging_speed_reward': 1.0095744780379499}}
+2025-08-17 21:24:29,728 - INFO - Simulation completed successfully
+2025-08-17 21:24:29,764 - INFO - Created intersection-v0 environment
+2025-08-17 21:24:29,764 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-17 21:24:29,764 - INFO - Created IntersectionSelfishPolicy for ego vehicle
+2025-08-17 21:24:29,798 - INFO - Starting simulation with IntersectionSelfishPolicy for 1000 steps
+2025-08-17 21:24:29,810 - INFO - Step 0/1000 completed
+2025-08-17 21:24:29,853 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-17 21:24:29,853 - INFO - Info: {'speed': 24.137030798171082, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9137030798171082), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-17 21:24:29,853 - INFO - Simulation completed successfully
+2025-08-17 21:24:29,873 - INFO - Created intersection-v0 environment
+2025-08-17 21:24:29,873 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-17 21:24:29,873 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-17 21:24:29,899 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-17 21:24:29,912 - INFO - Step 0/1000 completed
+2025-08-17 21:24:29,975 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-17 21:24:29,975 - INFO - Info: {'speed': 19.998542660230925, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.49985426602309246), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-17 21:24:29,975 - INFO - Simulation completed successfully
+2025-08-17 21:24:29,995 - INFO - Created intersection-v0 environment
+2025-08-17 21:24:29,995 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-17 21:24:29,995 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-17 21:24:30,014 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-17 21:24:30,027 - INFO - Step 0/1000 completed
+2025-08-17 21:24:30,106 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-17 21:24:30,106 - INFO - Info: {'speed': 19.998542660230925, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.49985426602309246), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-17 21:24:30,106 - INFO - Simulation completed successfully
+2025-08-17 21:24:30,109 - INFO - Created roundabout-v0 environment
+2025-08-17 21:24:30,109 - INFO - RoundaboutSelfishPolicy initialized
+2025-08-17 21:24:30,109 - INFO - Created RoundaboutSelfishPolicy for ego vehicle
+2025-08-17 21:24:30,113 - INFO - Starting simulation with RoundaboutSelfishPolicy for 1000 steps
+2025-08-17 21:24:30,130 - INFO - Step 0/1000 completed
+2025-08-17 21:24:30,803 - INFO - Simulation ended early at step 44 - terminated: False, truncated: True
+2025-08-17 21:24:30,803 - INFO - Info: {'speed': 29.999999999999986, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': False, 'high_speed_reward': 1.0, 'lane_change_reward': False, 'on_road_reward': np.False_}}
+2025-08-17 21:24:30,803 - INFO - Simulation completed successfully
+2025-08-17 21:24:30,807 - INFO - Created roundabout-v0 environment
+2025-08-17 21:24:30,807 - INFO - RoundaboutCooperativePolicy initialized with roundabout-specific social laws
+2025-08-17 21:24:30,807 - INFO - Created RoundaboutCooperativePolicy for ego vehicle
+2025-08-17 21:24:30,811 - INFO - Starting simulation with RoundaboutCooperativePolicy for 1000 steps
+2025-08-17 21:24:30,827 - INFO - Step 0/1000 completed
+2025-08-17 21:24:30,894 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-17 21:24:30,894 - INFO - Info: {'speed': 16.613400431134803, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': True, 'high_speed_reward': 0.5, 'lane_change_reward': False, 'on_road_reward': np.True_}}
+2025-08-17 21:24:30,894 - INFO - Simulation completed successfully
+2025-08-17 21:24:30,898 - INFO - Created roundabout-v0 environment
+2025-08-17 21:24:30,898 - INFO - RoundaboutCooperativePolicy initialized with roundabout-specific social laws
+2025-08-17 21:24:30,898 - INFO - Created RoundaboutCooperativePolicy for ego vehicle
+2025-08-17 21:24:30,902 - INFO - Starting simulation with RoundaboutCooperativePolicy for 1000 steps
+2025-08-17 21:24:30,918 - INFO - Step 0/1000 completed
+2025-08-17 21:24:30,936 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-17 21:24:30,936 - INFO - Info: {'speed': 10.205187505141557, 'crashed': True, 'action': 4, 'rewards': {'collision_reward': True, 'high_speed_reward': 0.0, 'lane_change_reward': False, 'on_road_reward': np.False_}}
+2025-08-17 21:24:30,936 - INFO - Simulation completed successfully
+2025-08-17 21:24:30,948 - INFO - Created racetrack-v0 environment
+2025-08-17 21:24:30,948 - INFO - RacetrackSelfishPolicy initialized with aggressive racing parameters
+2025-08-17 21:24:30,948 - INFO - Created RacetrackSelfishPolicy for ego vehicle
+2025-08-17 21:24:30,950 - INFO - Starting simulation with RacetrackSelfishPolicy for 1000 steps
+2025-08-17 21:24:30,951 - ERROR - Error during simulation: invalid index to scalar variable.

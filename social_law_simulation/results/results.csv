@@ -1,4 +1,6 @@
-scenario,composition,avg_speed_mean,avg_speed_std,total_collisions_mean,total_collisions_std,acceleration_std_mean,acceleration_std_std,merge_success_rate_mean,merge_success_rate_std,ttc_events_count_mean,ttc_events_count_std,throughput_mean,throughput_std
-Intersection,"0% Selfish, 100% Cooperative",7.366,0.411,0.8,1.095,0.0,0.0,0.0,0.0,1.6,1.517,0.0,0.0
-Intersection,"100% Selfish, 0% Cooperative",7.376,0.917,1.2,1.095,0.0,0.0,0.0,0.0,0.4,0.548,0.0,0.0
-Intersection,"50% Selfish, 50% Cooperative",7.561,0.798,0.0,0.0,0.0,0.0,0.0,0.0,0.8,1.095,0.0,0.0
+scenario,composition,avg_speed_mean,avg_speed_std,total_collisions_mean,total_collisions_std,acceleration_std_mean,acceleration_std_std,merge_success_rate_mean,merge_success_rate_std,ttc_events_count_mean,ttc_events_count_std,throughput_mean,throughput_std,steps,avg_speed,speed_std,throughput,total_collisions,avg_ttc,min_ttc,ttc_events_count,acceleration_std,acceleration_mean,merge_success_rate,merge_attempts,successful_merges
+Intersection,"0% Selfish, 100% Cooperative",7.366,0.411,0.8,1.095,0.0,0.0,0.0,0.0,1.6,1.517,0.0,0.0,,,,,,,,,,,,,
+Intersection,"100% Selfish, 0% Cooperative",7.376,0.917,1.2,1.095,0.0,0.0,0.0,0.0,0.4,0.548,0.0,0.0,,,,,,,,,,,,,
+Intersection,"50% Selfish, 50% Cooperative",7.561,0.798,0.0,0.0,0.0,0.0,0.0,0.0,0.8,1.095,0.0,0.0,,,,,,,,,,,,,
+Highway,"50% Selfish, 50% Cooperative",,,,,,,,,,,,,200.0,20.00515275026128,0.0611032305748453,0.0,0.0,1.8124457823676408,1.8124457823676408,1.0,0.0,0.0,0.0,0.0,0.0
+Highway,"50% Selfish, 50% Cooperative",,,,,,,,,,,,,5.0,20.206079973219357,0.3285380743856592,0.0,0.0,1.2166332603856043,1.2166332603856043,1.0,0.0,0.0,0.0,0.0,0.0

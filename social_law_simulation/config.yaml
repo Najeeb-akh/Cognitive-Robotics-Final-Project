@@ -5,6 +5,29 @@ simulation:
   duration_steps: 1000          # Number of simulation steps per run
   num_runs_per_config: 5        # Number of runs to average over
   
+# Scenario registry to drive config-based runs (used when CLI args are omitted)
+scenarios:
+  highway:
+    builder: highway
+    enable: true
+    compositions: [selfish, cooperative, mixed]
+  merge:
+    builder: merge
+    enable: true
+    compositions: [selfish, cooperative, mixed]
+  intersection:
+    builder: intersection
+    enable: true
+    compositions: [selfish, cooperative, mixed]
+  roundabout:
+    builder: roundabout
+    enable: true
+    compositions: [selfish, cooperative, mixed]
+  racetrack:
+    builder: racetrack
+    enable: true
+    compositions: [selfish, cooperative, mixed]
+  
 # Environment parameters
 environment:
   highway:
@@ -78,6 +101,53 @@ social_laws:
     density_threshold: 40       # vehicles/km/lane to trigger behavior
     increased_time_headway: 2.0 # Increased T parameter for IDM (default ~1.5s)
     default_time_headway: 1.5   # Default T parameter for IDM
+  
+  # Extended social laws for complex scenarios
+  polite_gap_provision:
+    enabled: true
+    gap_extension_time: 1.5     # Additional gap time provided (seconds)
+    detection_range: 40.0       # Range to detect vehicles needing gaps (meters)
+    speed_reduction_factor: 0.85 # Speed reduction to create gaps
+  cooperative_turn_taking:
+    enabled: true
+    max_consecutive_through: 3  # Max through vehicles before yielding to turns
+    turn_wait_threshold: 5.0    # Max wait time before priority given (seconds)
+    courtesy_gap_size: 8.0      # Size of gap created for turning vehicles (meters)
+  adaptive_right_of_way:
+    enabled: true
+    base_wait_time: 3.0         # Base wait time before courtesy (seconds)
+    wait_time_multiplier: 1.2   # Multiplier for extended waiting
+    emergency_override: true    # Override for emergency vehicles
+  entry_facilitation:
+    enabled: true
+    entry_detection_distance: 50.0 # Distance to detect entering vehicles (meters)
+    facilitation_speed_factor: 0.9 # Speed reduction to help entry
+    gap_creation_distance: 15.0    # Minimum gap created (meters)
+  smooth_flow_maintenance:
+    enabled: true
+    target_spacing_factor: 1.8     # Target spacing as multiple of minimum
+    speed_harmonization_rate: 0.1  # Rate of speed adjustment for smoothing
+    accordion_prevention_threshold: 5.0 # Speed variation threshold
+  exit_courtesy:
+    enabled: true
+    early_signal_distance: 30.0    # Distance to signal exit intent (meters)
+    exit_gap_provision: true       # Create gaps for exiting vehicles
+    lane_change_assistance: true   # Help with exit lane changes
+  safe_overtaking_protocol:
+    enabled: true
+    minimum_speed_differential: 10 # km/h difference required for overtaking
+    safe_overtaking_distance: 50   # Meters minimum space for safe overtaking
+    abort_threshold: 20            # Meters - abort if gap closes
+  defensive_positioning:
+    enabled: true
+    allow_faster_pass: true        # Allow significantly faster vehicles to pass
+    speed_differential_threshold: 15 # km/h threshold for allowing pass
+    defensive_gap_size: 20         # Meters gap provided for overtaking
+  slipstream_cooperation:
+    enabled: true
+    cooperation_speed_range: [80, 120]  # Speed range for slipstream cooperation
+    lead_consistency_factor: 0.95       # Consistency in leading vehicle speed
+    alternating_lead_distance: 500      # Distance before alternating lead (meters)
 
 # Baseline policy parameters
 baseline:
@@ -104,12 +174,30 @@ metrics:
     
   stability:
     acceleration_window: 100    # Window size for acceleration std dev calculation
+  
+  # Scenario-specific metrics toggles for extended scenarios
+  intersection:
+    turn_success_rate: true
+    waiting_time_analysis: true
+    throughput_measurement: true
+    conflict_resolution_time: true
+  roundabout:
+    entry_efficiency: true
+    flow_optimization: true
+    lane_utilization: true
+    yield_compliance: true
+  racetrack:
+    overtaking_success: true
+    speed_efficiency: true
+    cooperation_tracking: true
+    high_speed_safety: true
 
 # Output configuration
 output:
   results_dir: "results"        # Directory to save results
   plots_dir: "plots"            # Directory to save plots
   data_filename: "results.csv"  # Filename for aggregated results
+  logs_dir: "logs"              # Directory to save log files
 
 # Visualization configuration
 visualization:
@@ -117,3 +205,17 @@ visualization:
   window_size: [1200, 400]      # Window size [width, height] for rendering
   show_agent_info: true         # Show agent information in visualization
   highlight_cooperative: true   # Highlight cooperative agents differently
+  
+  # Scenario-specific visualization settings for extended scenarios
+  intersection:
+    show_conflict_zones: true
+    show_turn_intentions: true
+    traffic_flow_arrows: true
+  roundabout:
+    show_entry_queues: true
+    circular_flow_patterns: true
+    yield_zone_highlighting: true
+  racetrack:
+    speed_heatmaps: true
+    overtaking_zones: true
+    slipstream_visualization: true

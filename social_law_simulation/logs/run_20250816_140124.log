@@ -1,0 +1,4 @@
+2025-08-16 14:01:24,900 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-16 14:01:24,909 - INFO - Starting simulation with CooperativePolicy for 5 steps
+2025-08-16 14:01:25,171 - INFO - Step 0/5 completed
+2025-08-16 14:01:25,897 - INFO - Simulation completed successfully

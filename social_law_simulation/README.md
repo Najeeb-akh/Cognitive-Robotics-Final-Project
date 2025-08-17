@@ -1,578 +1,196 @@
-# Decentralized Simulation of Social Laws in Highway Traffic
+# **Decentralized Social Laws Simulation for Highway Traffic**
 
-A comprehensive Python implementation that simulates and compares the effects of cooperative driving behaviors across multiple traffic scenarios using the highway-env library. This project implements a decentralized approach where agents make decisions based solely on local observations, allowing emergent cooperative behaviors to improve traffic flow and safety.
+## 1. Introduction
 
-## 🆕 **Extended Implementation - Complex Scenarios Added**
+This project investigates the emergence of cooperative behavior in a fully decentralized multi-agent system simulating highway traffic. Using the `highway-env` library, we model and compare how "selfish" versus "cooperative" driving policies impact traffic dynamics across various scenarios. Agents operate solely on local observations, meaning there is no central controller. The goal is to analyze how simple, pre-defined social rules can lead to significant improvements in system-wide traffic efficiency, safety, and stability.
 
-This simulation now includes **5 traffic scenarios** with dramatically enhanced social law effectiveness demonstration:
+This README serves as the primary guide for understanding the project's architecture, running the simulations, and interpreting the results.
 
-- **Original Scenarios**: Highway & Merge (preserved unchanged)
-- **🆕 Extended Scenarios**: Intersection, Roundabout & Racetrack (new complex scenarios)
+## 2. Table of Contents
+- [1. Introduction](#1-introduction)
+- [2. Table of Contents](#2-table-of-contents)
+- [3. Core Features](#3-core-features)
+- [4. How to Run the Project](#4-how-to-run-the-project)
+  - [4.1. Installation](#41-installation)
+  - [4.2. Running Simulations](#42-running-simulations)
+  - [4.3. Expected Outputs](#43-expected-outputs)
+- [5. Project Configuration (`config.yaml`)](#5-project-configuration-configyaml)
+- [6. Scenarios and Policies](#6-scenarios-and-policies)
+  - [6.1. Implemented Scenarios](#61-implemented-scenarios)
+  - [6.2. Agent Policies](#62-agent-policies)
+- [7. Metrics and Evaluation](#7-metrics-and-evaluation)
+- [8. Project Structure](#8-project-structure)
+- [9. Requirements](#9-requirements)
+- [10. Troubleshooting](#10-troubleshooting)
 
-**Key Benefits of Extended Implementation**:
-- **Roundabout Scenario**: Shows **21.2% speed improvement** with cooperation
-- **Intersection Scenario**: Shows **8.5% speed improvement** plus better conflict resolution  
-- **Original Highway**: Shows **0% difference** (demonstrates why complex scenarios were needed)
-- **100% Backward Compatible**: All original functionality preserved
+## 3. Core Features
 
-## Table of Contents
+- **Single Entry Point**: All simulations are executed through `run_simulation.py`, which provides a command-line interface for full control.
+- **Diverse Scenarios**: The simulation supports five distinct traffic scenarios: `highway`, `merge`, `intersection`, `roundabout`, and `racetrack`.
+- **Configurable Agent Behaviors**: Easily switch between `selfish`, `cooperative`, and `mixed` agent populations to compare outcomes.
+- **Comprehensive Metrics**: The project evaluates performance based on:
+    - **Efficiency**: Average speed, throughput.
+    - **Safety**: Number of collisions, time-to-collision (TTC).
+    - **Stability**: Standard deviation of vehicle accelerations.
+    - **Scenario-Specific Metrics**: Merge success rates, intersection wait times, etc.
+- **Config-Driven Design**: A single `config.yaml` file controls all aspects of the simulation, from environment parameters to agent social laws and output paths.
+- **Automated Results**: The runner automatically aggregates metrics into CSV files and generates comparison plots, saved to the `results/` and `plots/` directories.
+- **Live Visualization**: Any simulation can be rendered in real-time by adding the `--render` flag.
 
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Social Laws Implementation](#social-laws-implementation)
-- [Results and Analysis](#results-and-analysis)
-- [Requirements](#requirements)
+## 4. How to Run the Project
 
-## Overview
+Follow these steps to set up the environment and run the simulations.
 
-This project compares two types of driving agents in highway traffic scenarios:
+### 4.1. Installation
 
-1. **Selfish Agents**: Follow standard IDM (Intelligent Driver Model) and MOBIL lane-changing models, focusing purely on personal velocity maximization
-2. **Cooperative Agents**: Extend selfish behavior with three social laws designed to improve overall traffic flow
+First, clone the repository and install the required Python packages using the provided `requirements.txt` file.
 
-The simulation maintains strict **decentralization** - each agent makes decisions based only on its local highway-env observations, ensuring realistic emergent behaviors.
-
-## Features
-
-### Implemented Social Laws (FR3)
-
-1. **Cooperative Merging (FR3.1)**: Agents decelerate to create gaps for merging vehicles
-2. **Polite Yielding (FR3.2)**: Agents slow down to accommodate lane-changing vehicles  
-3. **Phantom Jam Mitigation (FR3.3)**: Agents increase following distance in dense traffic to absorb speed variations
-
-### Simulation Scenarios (FR4 - Extended)
-
-#### **Original Scenarios** (Preserved Unchanged)
-- **Highway Scenario**: Multi-lane straight highway testing general traffic flow
-- **Merge Scenario**: Highway with merge ramp testing cooperative behaviors
-
-#### **🆕 Extended Complex Scenarios** (New Implementation)
-- **🚦 Intersection Scenario**: Multi-directional traffic with turn conflicts and right-of-way negotiations
-- **🌪️ Roundabout Scenario**: Circular traffic pattern with entry/exit coordination challenges  
-- **🏁 Racetrack Scenario**: High-speed continuous loop with overtaking and slipstreaming coordination
-
-#### **Enhanced Social Laws for Extended Scenarios**
-
-**Intersection-Specific Social Laws**:
-- **Polite Gap Provision**: Creates gaps for turning vehicles
-- **Cooperative Turn-Taking**: Balances through traffic with turn priorities
-- **Adaptive Right-of-Way**: Extends courtesy based on waiting times
-
-**Roundabout-Specific Social Laws**:
-- **Entry Facilitation**: Helps vehicles enter the roundabout safely
-- **Smooth Flow Maintenance**: Maintains consistent spacing and speed
-- **Exit Courtesy**: Assists vehicles exiting the roundabout
-
-**Racetrack-Specific Social Laws**:
-- **Safe Overtaking Protocol**: Coordinates safe high-speed overtaking
-- **Defensive Positioning**: Allows faster vehicles to pass safely
-- **Slipstream Cooperation**: Enables mutual benefit from drafting
-
-### Agent Compositions
-
-Each scenario runs with three different agent compositions:
-- 100% Selfish Agents
-- 100% Cooperative Agents  
-- 50% Selfish / 50% Cooperative Mix
-
-### Metrics Collection (FR5 - Extended)
-
-#### **Original Metrics** (All Scenarios)
-- **Efficiency**: Average speed, throughput
-- **Safety**: Collision count, Time-to-Collision events
-- **Stability**: Acceleration standard deviation
-- **Cooperation**: Merge success rates
-
-#### **🆕 Extended Scenario-Specific Metrics**
-
-**Intersection Metrics**:
-- **Turn Success Rate**: Percentage of successful turn completions
-- **Average Waiting Time**: Time vehicles wait at intersections
-- **Intersection Throughput**: Vehicles per minute through intersection
-- **Conflict Resolution Efficiency**: Time to resolve right-of-way conflicts
-
-**Roundabout Metrics**:
-- **Entry Success Rate**: Percentage of successful roundabout entries
-- **Average Entry Waiting Time**: Time vehicles wait to enter
-- **Roundabout Flow Rate**: Traffic flow optimization measurement
-- **Lane Balance Ratio**: Inner vs outer lane utilization
-- **Yield Compliance Rate**: Proper yielding behavior measurement
-
-**Racetrack Metrics**:
-- **Overtaking Success Rate**: Successful vs failed overtaking attempts
-- **Max Speed Achieved**: Peak speeds reached during simulation
-- **Slipstream Frequency**: Cooperative drafting events per time unit
-- **Cooperation Rate**: Mutual assistance events during racing
-- **High-Speed Safety Score**: Safety margins maintained at high speeds
-
-## Installation
-
-### Prerequisites
-
-- Python 3.8 or higher
-- pip package manager
-
-### Setup
-
-1. Clone or download the project:
 ```bash
-git clone <repository-url>
-cd social_law_simulation
-```
+# Clone the repository (if you haven't already)
+# git clone ...
 
-2. Install dependencies:
-```bash
+# Navigate to the project directory
+cd social_law_simulation/
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-3. Verify installation:
-```bash
-python src/main.py --help
-```
+### 4.2. Running Simulations
 
-## Configuration
+The `run_simulation.py` script is the main entry point. Here are the most common use cases for evaluation.
 
-The simulation is configured through `config.yaml`. Key parameters include:
+#### **Option 1: Run All Pre-configured Simulations (Recommended)**
 
-### Simulation Parameters
-```yaml
-simulation:
-  duration_steps: 1000      # Steps per simulation run
-  num_runs_per_config: 5    # Runs to average over
-```
-
-### Social Law Parameters
-```yaml
-social_laws:
-  cooperative_merging:
-    enabled: true
-    deceleration_factor: 0.8
-    detection_distance: 30.0
-  
-  polite_yielding:
-    enabled: true
-    speed_reduction_factor: 0.9
-    gap_creation_time: 2.0
-    
-  phantom_jam_mitigation:
-    enabled: true
-    density_threshold: 40
-    increased_time_headway: 2.0
-```
-
-### Environment Settings
-```yaml
-environment:
-  highway:
-    lanes_count: 4
-    vehicles_count: 50
-  merge:
-    lanes_count: 3
-    vehicles_count: 40
-```
-
-## Usage
-
-### New Unified CLI (run_simulation.py)
-
-Use the new unified entry point to run a single scenario/composition with optional rendering and CSV outputs. For full details, see the usage guide in `usage_guide.md`.
-
-Examples:
+This is the simplest way to reproduce all results. It will run every enabled scenario and composition defined in `config.yaml` and generate the final plots and CSV data.
 
 ```bash
-# Highway, 100% selfish, render and append to CSV
-python run_simulation.py --scenario highway --composition selfish --render \
-  --output-csv results/results.csv --output-steps-csv results/highway_selfish_steps.csv
+python run_simulation.py --config config.yaml
+```
 
-# Merge, 50/50 mixed, headless (no render)
+#### **Option 2: Run a Single Scenario with Live Rendering**
+
+To visualize a specific scenario and agent composition, use the `--scenario` and `--composition` flags, and add `--render`. This is useful for observing agent behaviors directly.
+
+```bash
+# Example: Watch cooperative agents on the highway
+python run_simulation.py --scenario highway --composition cooperative --render
+```
+
+#### **Option 3: Run a Specific Scenario and Save Detailed Data**
+
+This command runs a single simulation and saves both the aggregate summary and a detailed per-step log, which is useful for granular analysis.
+
+```bash
 python run_simulation.py --scenario merge --composition mixed \
-  --output-csv results/results.csv
+  --output-csv results/results.csv \
+  --output-steps-csv results/merge_mixed_steps_data.csv
+```
 
-# Roundabout, 100% cooperative, override duration
-python run_simulation.py --scenario roundabout --composition cooperative --render \
+#### **Option 4: Temporarily Override a Configuration Parameter**
+
+You can modify any parameter from `config.yaml` at runtime without editing the file by using the `--config-overrides` flag. This is useful for quick experiments.
+
+```bash
+# Example: Run the roundabout scenario for only 500 steps
+python run_simulation.py --scenario roundabout --composition cooperative \
   --config-overrides '{"simulation": {"duration_steps": 500}}'
 ```
 
-### 🚀 **Extended Simulation Usage** (Recommended)
+### 4.3. Expected Outputs
 
-#### **Run All Scenarios** (Original + Extended)
-```bash
-# Complete simulation with all 5 scenarios
-python src/main_extended.py --config config_extended.yaml
+After running the simulations (especially Option 1), the following artifacts will be generated:
 
-# With visualization for dramatic results
-python src/main_extended.py --config config_extended.yaml --render
-```
+- **`results/results.csv`**: An aggregated CSV file containing one row of metrics for each simulation run.
+- **`plots/`**: This directory will contain PNG plots comparing the performance of selfish, cooperative, and mixed compositions across all scenarios for key metrics like average speed, collisions, and stability.
+- **`logs/`**: Contains detailed log files for debugging purposes.
 
-#### **Test Individual Extended Scenarios**
-```bash
-# Roundabout (shows 21.2% improvement!)
-python src/main_extended.py --config config_extended.yaml --scenario Roundabout
+## 5. Project Configuration (`config.yaml`)
 
-# Intersection (shows 8.5% improvement + better conflicts)
-python src/main_extended.py --config config_extended.yaml --scenario Intersection
+The `config.yaml` file is the heart of the project, allowing you to control every aspect of the simulation without modifying the source code.
 
-# Racetrack (high-speed coordination)
-python src/main_extended.py --config config_extended.yaml --scenario Racetrack
-```
+**Key Sections:**
+- `simulation`: Global settings like the number of steps per simulation and the number of runs to average over.
+- `scenarios`: Enables or disables entire scenarios and specifies which agent compositions to run for each.
+- `environment`: Defines the physical properties of each scenario (e.g., number of lanes, vehicle counts).
+- `compositions`: Defines the ratio of selfish to cooperative agents for different named compositions.
+- `social_laws`: **This is where the core logic of cooperative behavior is defined.** You can enable/disable specific rules (e.g., polite yielding) and tune their parameters.
+- `metrics`: Configures thresholds and parameters for calculating metrics (e.g., TTC threshold for safety).
+- `output`: Specifies the directories for saving results, plots, and logs.
 
-#### **Regression Testing & Comparisons**
-```bash
-# Test only original scenarios (regression verification)
-python src/main_extended.py --config config_extended.yaml --original-only
+## 6. Scenarios and Policies
 
-# Test only new scenarios
-python src/main_extended.py --config config_extended.yaml --new-only
+### 6.1. Implemented Scenarios
 
-# Compare specific compositions
-python src/main_extended.py --config config_extended.yaml --composition "100% Cooperative"
-```
+- **Highway**: A multi-lane highway for analyzing lane-changing behavior and phantom jam mitigation.
+- **Merge**: A lane-merging scenario to test cooperation during high-congestion events.
+- **Intersection**: A four-way intersection where agents must coordinate to avoid collisions and deadlocks.
+- **Roundabout**: A circular intersection that requires yielding and smooth flow maintenance.
+- **Racetrack**: A high-speed oval track for studying overtaking and slipstreaming behaviors.
 
-#### **Visualization Examples**
-```bash
-# Watch roundabout coordination (most dramatic)
-python src/main_extended.py --config config_extended.yaml --scenario Roundabout --render
+### 6.2. Agent Policies
 
-# Watch intersection turn-taking
-python src/main_extended.py --config config_extended.yaml --scenario Intersection --render
+The behavior of each agent is governed by a policy. The key distinction is between selfish and cooperative behaviors.
 
-# Watch high-speed racing coordination  
-python src/main_extended.py --config config_extended.yaml --scenario Racetrack --render
-```
+- **`SelfishPolicy`**: This policy is based on standard models like IDM (Intelligent Driver Model) for longitudinal control and MOBIL (Minimizing Overall Braking Induced by Lane Changes) for lateral control. Agents act purely to maximize their own utility (e.g., speed) without regard for others.
+- **`CooperativePolicy`**: This policy extends the selfish base with a set of "social laws" that encourage pro-social behavior. These include:
+    - **Cooperative Merging**: Actively slowing down to create gaps for merging vehicles.
+    - **Polite Yielding**: Reducing speed to facilitate smoother lane changes for others.
+    - **Phantom Jam Mitigation**: Increasing headway in dense traffic to absorb speed variations and prevent jams.
+    - **Scenario-Specific Laws**: Policies for turn-taking at intersections, yielding at roundabouts, and safe overtaking on the racetrack.
 
-### 📊 **Original Simulation Usage** (Preserved)
+The specific implementations can be found in the `src/policies/` directory.
 
-#### **Basic Execution**
+## 7. Metrics and Evaluation
 
-Run all original scenarios:
-```bash
-python src/main.py --config config.yaml
-```
+The success of different policies is measured quantitatively.
 
-#### **Advanced Options**
+- **Primary Metrics**:
+  - `average_speed`: Measures traffic flow efficiency.
+  - `collisions`: The primary safety metric, counting the total number of collisions.
+  - `acceleration_stability`: The standard deviation of accelerations, where lower values indicate smoother, more stable traffic flow.
+- **Scenario-Specific Metrics**:
+  - `merge_success_rate`: The percentage of vehicles that successfully merge.
+  - `intersection_waiting_time`: The average time vehicles spend waiting to cross.
+- **Output Analysis**: The `src/visualization.py` script is used internally by the runner to generate plots from the final `results.csv` file, providing a clear visual comparison between the different agent compositions.
 
-Run specific scenario:
-```bash
-python src/main.py --scenario Highway
-python src/main.py --scenario Merge
-```
+## 8. Project Structure
 
-Run specific agent composition:
-```bash
-python src/main.py --composition "100% Selfish"
-python src/main.py --composition "100% Cooperative"
-```
-
-**Enable real-time visualization**:
-```bash
-python src/main.py --render
-python src/main.py --render --scenario Highway --composition "100% Cooperative"
-```
-
-Use custom configuration:
-```bash
-python src/main.py --config custom_config.yaml
-```
-
-Enable debug logging:
-```bash
-python src/main.py --log-level DEBUG
-```
-
-### 🎥 **Enhanced Real-Time Visualization**
-
-The `--render` flag enables real-time visualization across all scenarios:
-
-#### **Extended Scenario Visualizations**
-- **🚦 Intersection**: Multi-directional traffic coordination, turn conflicts, gap provision
-- **🌪️ Roundabout**: Circular traffic flow, entry facilitation, exit courtesy
-- **🏁 Racetrack**: High-speed overtaking, slipstreaming, defensive positioning
-
-#### **Original Scenario Visualizations** (Preserved)
-- **Highway Scenario**: Watch vehicles navigate multi-lane traffic
-- **Merge Scenario**: Observe merging behaviors and lane changes
-
-#### **Visual Elements**
-- **Blue vehicles**: Standard traffic agents
-- **Red vehicle**: Ego vehicle (main controlled agent)
-- **Green areas**: Target lanes, merge zones, special areas
-- **Scenario-specific indicators**:
-  - Intersection: Conflict zones, turn intentions
-  - Roundabout: Entry queues, circular flow patterns
-  - Racetrack: Overtaking zones, speed indicators
-
-#### **Controls**
-- Close window or press ESC/Q to stop simulation early
-- Simulation runs at ~20 FPS for clear observation
-
-#### **Best Visualization Examples**
-```bash
-# Most dramatic - watch roundabout cooperation (21% improvement)
-python src/main_extended.py --config config_extended.yaml --scenario Roundabout --render
-
-# Complex coordination - intersection turn-taking
-python src/main_extended.py --config config_extended.yaml --scenario Intersection --render
-
-# High-speed dynamics - racing coordination
-python src/main_extended.py --config config_extended.yaml --scenario Racetrack --render
-
-# Original scenarios (for comparison)
-python src/main.py --render --scenario Merge --composition "100% Cooperative"
-```
-
-#### **Easy Demo Script** (Updated)
-For convenience, use the interactive demo script:
-```bash
-python demo_visualization.py
-```
-This provides a menu-driven interface to run different visualization scenarios including the new extended scenarios.
-
-### 📊 **Output Files**
-
-#### **Extended Simulation Output**
-1. **Extended Results CSV** (`results/results_extended.csv`): Comprehensive metrics across all 5 scenarios
-2. **Extended Comparison Plots** (`plots/`): Enhanced visualizations showing scenario-specific benefits
-3. **Extended Log Files**: Detailed execution logs with scenario-specific insights
-4. **Scenario Performance Summary**: Automated comparison showing cooperation benefits
-
-#### **Original Simulation Output** (Preserved)
-1. **Results CSV** (`results/results.csv`): Original aggregated metrics
-2. **Comparison Plots** (`plots/`): Original bar charts comparing metrics
-3. **Log Files**: Original detailed execution logs with timestamps
-
-## 📁 **Project Structure - Extended**
+The project is organized to separate configuration, core logic, and outputs.
 
 ```
 social_law_simulation/
-├── src/
-│   ├── policies/
-│   │   ├── __init__.py
-│   │   ├── selfish_policy.py           # ✅ Original baseline (unchanged)
-│   │   ├── cooperative_policy.py       # ✅ Original social laws (unchanged)
-│   │   ├── intersection_policy.py      # 🆕 Intersection-specific behaviors
-│   │   ├── roundabout_policy.py        # 🆕 Roundabout-specific behaviors
-│   │   └── racetrack_policy.py         # 🆕 Racetrack-specific behaviors
-│   ├── scenarios.py                    # ✅ Original scenarios (unchanged)
-│   ├── scenarios_extended.py           # 🆕 Extended scenarios + imports originals
-│   ├── metrics.py                      # ✅ Original metrics (unchanged)
-│   ├── metrics_extended.py             # 🆕 Extended metrics + imports originals
-│   ├── visualization.py                # ✅ Original visualization (unchanged)
-│   ├── main.py                         # ✅ Original simulation runner (unchanged)
-│   └── main_extended.py                # 🆕 Extended simulation runner
-├── config.yaml                         # ✅ Original configuration (unchanged)
-├── config_extended.yaml                # 🆕 Extended configuration
-├── requirements.txt                    # Python dependencies
-├── EXTENDED_SCENARIOS_SUMMARY.md       # 🆕 Implementation summary
-└── README.md                           # 📝 Updated documentation
+├── config.yaml               # Main configuration file
+├── run_simulation.py         # SINGLE ENTRY POINT for all simulations
+├── requirements.txt          # Project dependencies
+├── results/                  # Output directory for CSV data
+├── plots/                    # Output directory for generated graphs
+├── logs/                     # Output directory for log files
+├── src/                      # Source code directory
+│   ├── scenarios.py          # Environment builders for core scenarios
+│   ├── scenarios_extended.py # ...for extended scenarios
+│   ├── metrics.py            # Core metric calculation logic
+│   ├── metrics_extended.py   # ...for scenario-specific metrics
+│   ├── visualization.py      # Plotting and visualization utilities
+│   └── policies/             # Directory containing all agent behavior logic
+│       ├── selfish_policy.py
+│       └── cooperative_policy.py
+│       └── ... (scenario-specific policies)
+└── tests/                    # Unit tests
 ```
 
-### 🔄 **Backward Compatibility**
-- **✅ All original files preserved unchanged**
-- **✅ Original commands work identically**
-- **✅ Original results reproducible**
-- **🆕 Extended functionality purely additive**
+## 9. Requirements
 
-## Social Laws Implementation
+- Python 3.8+
+- Key packages (see `requirements.txt` for a full list):
+  - `highway-env`: The core simulation environment.
+  - `numpy`, `pandas`: For data manipulation and analysis.
+  - `matplotlib`, `seaborn`: For plotting.
+  - `pyyaml`: For parsing the `config.yaml` file.
+  - `pytest`: For running tests.
 
-### FR3.1: Cooperative Merging
+## 10. Troubleshooting
 
-**Trigger**: Vehicle detects another agent in merge lane attempting to enter ahead
-
-**Action**: Moderately decelerate to create safe merging gap
-
-```python
-def _check_cooperative_merging(self):
-    merging_vehicle = self._detect_merging_vehicle(merge_lane_index)
-    if merging_vehicle and self._is_merge_space_insufficient(merging_vehicle):
-        return 4  # SLOWER action
-```
-
-### FR3.2: Polite Yielding
-
-**Trigger**: Adjacent vehicle signals intent to change lanes in front
-
-**Action**: Slightly reduce speed to create gap for lane changer
-
-```python
-def _check_polite_yielding(self):
-    if self._detect_lane_change_intent(adjacent_lane_index):
-        self.yielding_timer = self.GAP_CREATION_TIME
-        return 4  # SLOWER action
-```
-
-### FR3.3: Phantom Jam Mitigation
-
-**Trigger**: Local traffic density exceeds threshold (40 vehicles/km/lane)
-
-**Action**: Increase IDM time headway parameter from 1.5s to 2.0s
-
-```python
-def _check_phantom_jam_mitigation(self):
-    density = self._calculate_local_density()
-    if density > self.DENSITY_THRESHOLD:
-        self.TIME_HEADWAY = self.INCREASED_TIME_HEADWAY
-```
-
-## 📈 **Results and Analysis - Extended Implementation**
-
-### 🎯 **Dramatic Social Law Benefits Demonstrated**
-
-The extended implementation reveals clear, measurable benefits of social laws:
-
-#### **Scenario Comparison - Cooperation Effectiveness**
-
-| Scenario | Selfish Avg Speed | Cooperative Avg Speed | **Improvement** | Key Benefit |
-|----------|------------------|----------------------|----------------|-------------|
-| **Highway** (Original) | 20.026 | 20.026 | **0.0%** | No difference (baseline) |
-| **Intersection** 🚦 | 7.124 | 7.728 | **+8.5%** | Better conflict handling |
-| **Roundabout** 🌪️ | 23.742 | 28.766 | **+21.2%** | Dramatic flow improvement |
-| **Merge** (Original) | *varies* | *varies* | *moderate* | Context-dependent |
-| **Racetrack** 🏁 | *testing* | *testing* | *expected high* | High-speed coordination |
-
-#### **Key Insights**
-
-1. **🎯 Complex Scenarios Amplify Benefits**: Simple highway shows 0% difference, but roundabout shows 21.2% improvement
-2. **📊 Different Scenarios Test Different Aspects**: Each scenario stresses different social coordination mechanisms
-3. **🔍 Extended Metrics Capture Nuanced Effects**: Scenario-specific metrics reveal cooperation benefits invisible in simple scenarios
-
-### 💡 **Why Complex Scenarios Matter**
-
-**Original Challenge**: Highway and merge scenarios showed minimal differences between selfish vs cooperative behaviors, making it difficult to demonstrate social law effectiveness.
-
-**Extended Solution**: Complex scenarios create situations where cooperation provides clear, measurable advantages:
-- **Intersections**: Turn conflicts require coordination
-- **Roundabouts**: Entry/exit coordination creates flow bottlenecks
-- **Racetracks**: High-speed scenarios amplify safety vs efficiency tradeoffs
-
-### 📊 **Extended Results Interpretation**
-
-#### **Extended Results Files**
-- `results_extended.csv`: Contains comprehensive metrics across all 5 scenarios
-- Enhanced plots show scenario-specific benefits
-- Automated performance summaries highlight cooperation advantages
-
-#### **Key Metrics to Analyze**
-- `avg_speed_mean`: Speed improvements (roundabout shows 21.2% gain)
-- `total_collisions_mean`: Safety improvements in complex scenarios
-- **Scenario-specific metrics**: Turn success, entry efficiency, overtaking safety
-- `ttc_events_count_mean`: Near-miss analysis across scenario types
-
-#### **Original Results** (Preserved)
-All original analysis methods remain unchanged:
-- `results.csv`: Original highway/merge analysis
-- Original plot generation and interpretation
-- Backward compatibility with existing research
-
-### 🔬 **Research Implications**
-
-The extended implementation demonstrates that:
-1. **Social law effectiveness depends on scenario complexity**
-2. **Simple scenarios may underestimate cooperation benefits**
-3. **Different traffic situations require different social coordination mechanisms**
-4. **Complex scenarios provide clearer differentiation for research studies**
-
-## Requirements
-
-### Core Dependencies
-
-- `highway-env>=1.8.0`: Traffic simulation environment
-- `gymnasium>=0.28.0`: Reinforcement learning interface
-- `numpy>=1.21.0`: Numerical computations
-- `pandas>=1.3.0`: Data analysis and manipulation
-- `matplotlib>=3.5.0`: Plotting and visualization
-- `seaborn>=0.11.0`: Statistical visualization
-- `pyyaml>=6.0`: Configuration file parsing
-
-### System Requirements
-
-- **Memory**: 4GB RAM minimum, 8GB recommended
-- **CPU**: Multi-core processor recommended for parallel runs
-- **Storage**: 1GB free space for results and logs
-- **OS**: Windows 10+, macOS 10.14+, or Linux
-
-### Performance Notes
-
-- Single simulation run (1000 steps, ~50 agents): < 5 minutes
-- Complete study (all scenarios/compositions): 30-60 minutes
-- Memory usage: ~500MB during execution
-
-## Troubleshooting
-
-### Common Issues
-
-**Import Errors**: Ensure all dependencies installed via `pip install -r requirements.txt`
-
-**Configuration Errors**: Validate YAML syntax in `config.yaml`
-
-**Memory Issues**: Reduce `vehicles_count` or `duration_steps` in config
-
-**Slow Performance**: Reduce `num_runs_per_config` for faster testing
-
-### Debug Mode
-
-Enable detailed logging:
-```bash
-python src/main.py --log-level DEBUG
-```
-
-This provides step-by-step execution details and metrics collection information.
-
----
-
-## 🆕 **Extended Implementation Summary**
-
-### 📈 **What's New**
-- **3 New Complex Scenarios**: Intersection, Roundabout, Racetrack
-- **9 New Social Laws**: Scenario-specific cooperative behaviors
-- **Enhanced Metrics System**: Scenario-specific performance measurement
-- **21.2% Speed Improvement**: Demonstrated in roundabout scenario
-- **100% Backward Compatible**: All original functionality preserved
-
-### 🚀 **Quick Start - Extended Simulation**
-```bash
-# Best results demonstration
-python src/main_extended.py --config config_extended.yaml --scenario Roundabout
-
-# Full extended simulation
-python src/main_extended.py --config config_extended.yaml
-
-# With visualization  
-python src/main_extended.py --config config_extended.yaml --scenario Intersection --render
-```
-
-### 📊 **Key Results Summary**
-- **Highway**: 0% improvement (baseline)
-- **Intersection**: 8.5% improvement + better conflict handling
-- **Roundabout**: 21.2% improvement (most dramatic)
-- **Racetrack**: High-speed coordination testing
-
-### 📁 **Key Files**
-- `src/main_extended.py`: Extended simulation runner
-- `config_extended.yaml`: Extended configuration
-- `EXTENDED_SCENARIOS_SUMMARY.md`: Detailed implementation documentation
-
-### 🔄 **Migration Path**
-- **Keep using original**: `python src/main.py --config config.yaml`
-- **Try extended features**: `python src/main_extended.py --config config_extended.yaml`
-- **Regression testing**: `python src/main_extended.py --config config_extended.yaml --original-only`
-
----
-
-## Citation
-
-If you use this code in your research, please cite:
-
-```
-Decentralized Simulation of Social Laws in Highway Traffic
-Extended Implementation with Complex Scenarios
-Implementation of cooperative driving behaviors using highway-env
-Demonstrates 21.2% improvement in roundabout coordination scenarios
-```
-
-## License
-
-This project is released under the MIT License. See LICENSE file for details.
+- **Import Errors**: If you encounter import errors, ensure you have installed all packages correctly by running `pip install -r requirements.txt`.
+- **Rendering Issues on macOS**: Visualization can sometimes be problematic. If the rendering window fails to open, try running without the `--render` flag. The simulation will still run and produce data.
+- **Slow Performance**: The simulation can be computationally intensive. To speed it up for quick tests, you can reduce `simulation.duration_steps` or `environment.*.vehicles_count` in `config.yaml`.
