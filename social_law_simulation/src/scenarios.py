@@ -46,11 +46,12 @@ def create_highway_scenario(config, render_mode='rgb_array'):
             },
             "absolute": False,
             "order": "sorted",
-            "normalize": True  # Add normalization to fix observation space warnings
+            "normalize": False  # Use physical units so policy thresholds apply
         },
         "action": {
             "type": "DiscreteMetaAction",
         },
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "lanes_count": env_config.get('lanes_count', 4),
         "vehicles_count": env_config.get('vehicles_count', 50),
         "controlled_vehicles": 1,
@@ -65,7 +66,7 @@ def create_highway_scenario(config, render_mode='rgb_array'):
         "reward_speed_range": [20, 30],
         "normalize_reward": True,
         "offroad_terminal": False,
-        "terminate_on_collision": False
+        "collision_termination": False
     }
     
     # Create environment and configure it
@@ -105,11 +106,12 @@ def create_merge_scenario(config, render_mode='rgb_array'):
             },
             "absolute": False,
             "order": "sorted",
-            "normalize": True  # Add normalization to fix observation space warnings
+            "normalize": False  # Use physical units so policy thresholds apply
         },
         "action": {
             "type": "DiscreteMetaAction",
         },
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "lanes_count": env_config.get('lanes_count', 3),
         "vehicles_count": env_config.get('vehicles_count', 40),
         "controlled_vehicles": 1,
@@ -124,7 +126,7 @@ def create_merge_scenario(config, render_mode='rgb_array'):
         "reward_speed_range": [20, 30],
         "normalize_reward": True,
         "offroad_terminal": False,
-        "terminate_on_collision": False,
+        "collision_termination": False,
         "merging_lane_spawn_probability": 0.2,  # Probability of spawning in merge lane
         "merging_speed_ratio": 0.8,  # Speed ratio for merging vehicles
         "simulation_frequency": 15,  # Lower frequency to allow longer episodes

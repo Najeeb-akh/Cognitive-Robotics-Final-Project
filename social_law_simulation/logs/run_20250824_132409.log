@@ -1,0 +1,112 @@
+2025-08-24 13:24:09,499 - INFO - Running 3 runs for highway scenario with selfish composition
+2025-08-24 13:24:09,507 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/50 (composition=selfish)
+2025-08-24 13:24:09,512 - INFO - Created SelfishPolicy for ego vehicle
+2025-08-24 13:24:09,517 - INFO - Starting simulation with SelfishPolicy for 1000 steps
+2025-08-24 13:24:09,690 - INFO - [EGO] step=0 speed=25.0 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:24:09,690 - INFO - Step 0/1000 completed
+2025-08-24 13:24:18,210 - INFO - [EGO] step=50 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:24:26,695 - INFO - [EGO] step=100 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:24:35,028 - INFO - [EGO] step=150 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:24:43,274 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:24:43,274 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-24 13:24:43,274 - INFO - Simulation completed successfully
+2025-08-24 13:24:43,281 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/50 (composition=selfish)
+2025-08-24 13:24:43,286 - INFO - Created SelfishPolicy for ego vehicle
+2025-08-24 13:24:43,291 - INFO - Starting simulation with SelfishPolicy for 1000 steps
+2025-08-24 13:24:43,464 - INFO - [EGO] step=0 speed=20.8544411731307 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:24:43,464 - INFO - Step 0/1000 completed
+2025-08-24 13:24:52,004 - INFO - [EGO] step=50 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:00,626 - INFO - [EGO] step=100 speed=24.975047934935745 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:09,150 - INFO - [EGO] step=150 speed=24.975047934935745 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:17,388 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:25:17,388 - INFO - Info: {'speed': 24.85398605633181, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(0.48539860563318094), 'on_road_reward': 1.0}}
+2025-08-24 13:25:17,388 - INFO - Simulation completed successfully
+2025-08-24 13:25:17,395 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/50 (composition=selfish)
+2025-08-24 13:25:17,400 - INFO - Created SelfishPolicy for ego vehicle
+2025-08-24 13:25:17,405 - INFO - Starting simulation with SelfishPolicy for 1000 steps
+2025-08-24 13:25:17,577 - INFO - [EGO] step=0 speed=29.1455588268693 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:17,577 - INFO - Step 0/1000 completed
+2025-08-24 13:25:26,071 - INFO - [EGO] step=50 speed=20.854440551718934 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:34,524 - INFO - [EGO] step=100 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:43,069 - INFO - [EGO] step=150 speed=20.00000000009056 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:51,419 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:25:51,419 - INFO - Info: {'speed': 20.004264011248008, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(0.0004264011248007904), 'on_road_reward': 1.0}}
+2025-08-24 13:25:51,419 - INFO - Simulation completed successfully
+2025-08-24 13:25:51,419 - INFO - Running 3 runs for highway scenario with cooperative composition
+2025-08-24 13:25:51,426 - INFO - Population overrides: cooperative_set=0/50, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:25:51,431 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-24 13:25:51,436 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-24 13:25:51,614 - INFO - [EGO] step=0 speed=25.0 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:25:51,614 - INFO - Step 0/1000 completed
+2025-08-24 13:26:00,258 - INFO - [EGO] step=50 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:08,705 - INFO - [EGO] step=100 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:17,145 - INFO - [EGO] step=150 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:25,412 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:26:25,412 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-24 13:26:25,412 - INFO - Simulation completed successfully
+2025-08-24 13:26:25,419 - INFO - Population overrides: cooperative_set=0/50, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:26:25,424 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-24 13:26:25,429 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-24 13:26:25,602 - INFO - [EGO] step=0 speed=20.8544411731307 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:25,602 - INFO - Step 0/1000 completed
+2025-08-24 13:26:34,216 - INFO - [EGO] step=50 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:42,720 - INFO - [EGO] step=100 speed=20.000024911925326 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:51,265 - INFO - [EGO] step=150 speed=20.000145796671845 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:59,683 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:26:59,683 - INFO - Info: {'speed': 20.146013322256426, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(0.014601332225642593), 'on_road_reward': 1.0}}
+2025-08-24 13:26:59,683 - INFO - Simulation completed successfully
+2025-08-24 13:26:59,689 - INFO - Population overrides: cooperative_set=0/50, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:26:59,695 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-24 13:26:59,700 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-24 13:26:59,875 - INFO - [EGO] step=0 speed=20.8544411731307 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:26:59,875 - INFO - Step 0/1000 completed
+2025-08-24 13:27:08,442 - INFO - [EGO] step=50 speed=20.000000000018105 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:27:16,964 - INFO - [EGO] step=100 speed=29.829033991267547 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:27:25,560 - INFO - [EGO] step=150 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:27:33,905 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:27:33,905 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-24 13:27:33,905 - INFO - Simulation completed successfully
+2025-08-24 13:27:33,905 - INFO - Running 3 runs for highway scenario with mixed composition
+2025-08-24 13:27:33,912 - INFO - Population overrides: cooperative_set=0/25, baseline_set=0/25 (composition=mixed)
+2025-08-24 13:27:33,917 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-24 13:27:33,922 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-24 13:27:34,096 - INFO - [EGO] step=0 speed=25.0 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:27:34,096 - INFO - Step 0/1000 completed
+2025-08-24 13:27:42,727 - INFO - [EGO] step=50 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:27:51,204 - INFO - [EGO] step=100 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:27:59,815 - INFO - [EGO] step=150 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:28:08,165 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:28:08,165 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-24 13:28:08,165 - INFO - Simulation completed successfully
+2025-08-24 13:28:08,172 - INFO - Population overrides: cooperative_set=0/25, baseline_set=0/25 (composition=mixed)
+2025-08-24 13:28:08,177 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-24 13:28:08,182 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-24 13:28:08,361 - INFO - [EGO] step=0 speed=20.8544411731307 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:28:08,361 - INFO - Step 0/1000 completed
+2025-08-24 13:28:17,023 - INFO - [EGO] step=50 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:28:25,574 - INFO - [EGO] step=100 speed=20.000024911925326 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:28:34,203 - INFO - [EGO] step=150 speed=20.000145796671845 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:28:42,661 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:28:42,662 - INFO - Info: {'speed': 20.146013322256426, 'crashed': False, 'action': 2, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(0.014601332225642593), 'on_road_reward': 1.0}}
+2025-08-24 13:28:42,662 - INFO - Simulation completed successfully
+2025-08-24 13:28:42,669 - INFO - Population overrides: cooperative_set=0/25, baseline_set=0/25 (composition=mixed)
+2025-08-24 13:28:42,674 - INFO - Created CooperativePolicy for ego vehicle
+2025-08-24 13:28:42,679 - INFO - Starting simulation with CooperativePolicy for 1000 steps
+2025-08-24 13:28:42,857 - INFO - [EGO] step=0 speed=20.8544411731307 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:28:42,858 - INFO - Step 0/1000 completed
+2025-08-24 13:28:51,472 - INFO - [EGO] step=50 speed=20.000000000018105 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:29:00,089 - INFO - [EGO] step=100 speed=29.829033991267547 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:29:08,720 - INFO - [EGO] step=150 speed=20.000000000000014 lane_index=('0', '1', 3) crashed=False
+2025-08-24 13:29:17,105 - INFO - Simulation ended early at step 199 - terminated: False, truncated: True
+2025-08-24 13:29:17,106 - INFO - Info: {'speed': 20.000000000000014, 'crashed': False, 'action': 4, 'rewards': {'collision_reward': 0.0, 'right_lane_reward': np.float64(1.0), 'high_speed_reward': np.float64(1.4210854715202005e-15), 'on_road_reward': 1.0}}
+2025-08-24 13:29:17,106 - INFO - Simulation completed successfully
+2025-08-24 13:29:17,106 - INFO - Saving aggregated results...
+2025-08-24 13:29:17,117 - INFO - Aggregated results saved to results/highway_stats.csv
+2025-08-24 13:29:17,117 - INFO - Generating comparison plots...
+2025-08-24 13:29:22,075 - INFO - Generated 6 plots in /Users/shayvasilisky/Documents/Personal/TASP/Second Year/Semester B/רובוטים קוגניטיביים/Project CC_V2/social_law_simulation/plots
+2025-08-24 13:29:22,075 - INFO -   - highway_average_speed.png
+2025-08-24 13:29:22,075 - INFO -   - highway_collisions.png
+2025-08-24 13:29:22,075 - INFO -   - highway_acceleration_stability.png
+2025-08-24 13:29:22,075 - INFO -   - combined_efficiency_comparison.png
+2025-08-24 13:29:22,075 - INFO -   - combined_safety_comparison.png
+2025-08-24 13:29:22,075 - INFO -   - summary_dashboard.png

@@ -127,6 +127,9 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
     logging.info(f"Starting simulation with {agent_name} for {duration_steps} steps")
     
     try:
+        log_actions = bool(config.get('debug', {}).get('log_actions', False))
+        log_actions_steps = int(config.get('debug', {}).get('log_actions_steps', 0))
+        log_ego_every = int(config.get('debug', {}).get('log_ego_every', 0))
         for step in range(duration_steps):
             # Check for stop event
             if stop_event and stop_event.is_set():
@@ -145,11 +148,19 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
             # Get action from agent policy if available, otherwise use default
             if agent_policy:
                 action = agent_policy.act(obs)
+                # Early-step action logging for diagnostics
+                if log_actions and step < log_actions_steps:
+                    # Best-effort ego speed read
+                    ego = getattr(env.unwrapped, 'vehicle', None)
+                    ego_speed = getattr(ego, 'speed', None) if ego is not None else None
+                    logging.info(f"[ACTIONS] step={step} action={action} ego_speed={ego_speed}")
             else:
                 action = 1  # Default fallback action (IDLE)
             
             # Step the environment with agent's action
             obs, reward, terminated, truncated, info = env.step(action)
+
+            # No incremental population overrides; handled centrally in runner per-run
             
             # Render the environment if requested
             if render:
@@ -161,6 +172,14 @@ def run_single_simulation(env, agent_policy, config, metrics_collector, render=F
             
             # Collect metrics for this step (pass info per plan)
             metrics_collector.collect_step_metrics(env, step, info)
+
+            # Periodic ego summary logging
+            if log_ego_every and step % log_ego_every == 0:
+                ego = getattr(env.unwrapped, 'vehicle', None)
+                if ego is not None:
+                    logging.info(
+                        f"[EGO] step={step} speed={getattr(ego, 'speed', None)} lane_index={getattr(ego, 'lane_index', None)} crashed={getattr(ego, 'crashed', False)}"
+                    )
             
             # Emit progress updates periodically
             if progress_cb and step % 50 == 0:

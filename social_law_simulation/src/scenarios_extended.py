@@ -51,7 +51,7 @@ def create_intersection_scenario(config, render_mode='rgb_array'):
             },
             "absolute": False,
             "order": "sorted",
-            "normalize": True
+            "normalize": False  # Keep physical units for policy thresholds
         },
         "action": {
             "type": "DiscreteMetaAction",
@@ -112,7 +112,7 @@ def create_roundabout_scenario(config, render_mode='rgb_array'):
     # Create roundabout environment configuration
     roundabout_config = {
         "observation": {
-            "type": "Kinematics", 
+            "type": "Kinematics",
             "vehicles_count": 18,  # Moderate number for roundabout complexity
             "features": ["presence", "x", "y", "vx", "vy"],
             "features_range": {
@@ -123,7 +123,7 @@ def create_roundabout_scenario(config, render_mode='rgb_array'):
             },
             "absolute": False,
             "order": "sorted", 
-            "normalize": True
+            "normalize": False  # Keep physical units for policy thresholds
         },
         "action": {
             "type": "DiscreteMetaAction",
@@ -197,7 +197,7 @@ def create_racetrack_scenario(config, render_mode='rgb_array'):
             },
             "absolute": False,
             "order": "sorted",
-            "normalize": True
+            "normalize": False  # Keep physical units for policy thresholds
         },
         "action": {
             "type": "DiscreteMetaAction",

@@ -1,0 +1,4 @@
+scenario,composition,avg_speed_mean,avg_speed_std,avg_speed_count,total_collisions_mean,total_collisions_std,total_collisions_count,acceleration_std_mean,acceleration_std_std,acceleration_std_count,merge_success_rate_mean,merge_success_rate_std,merge_success_rate_count,ttc_events_count_mean,ttc_events_count_std,ttc_events_count_count,throughput_mean,throughput_std,throughput_count,avg_network_speed_mean,avg_network_speed_std,avg_network_speed_count,sample_size
+Highway,"0% Selfish, 100% Cooperative",20.502,0.211,10,0.0,0.0,10,0.0,0.0,10,0.0,0.0,10,0.6,0.699,10,0.0,0.0,10,20.91,0.107,10,10
+Highway,"100% Selfish, 0% Cooperative",21.218,0.911,10,0.2,0.632,10,0.0,0.0,10,0.0,0.0,10,0.5,0.707,10,0.0,0.0,10,20.896,0.134,10,10
+Highway,"50% Selfish, 50% Cooperative",20.502,0.211,10,0.0,0.0,10,0.0,0.0,10,0.0,0.0,10,0.6,0.699,10,0.0,0.0,10,20.91,0.107,10,10

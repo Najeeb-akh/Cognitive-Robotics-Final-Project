@@ -149,6 +149,14 @@ social_laws:
     lead_consistency_factor: 0.95       # Consistency in leading vehicle speed
     alternating_lead_distance: 500      # Distance before alternating lead (meters)
 
+# Cooperative population overrides applied to background vehicles when composition is cooperative
+cooperative_population_overrides:
+  baseline:
+    idm:
+      time_headway: 2.0        # Increase IDM headway for smoother, safer flow
+    mobil:
+      politeness_factor: 0.6   # Increase politeness to reduce aggressive lane changes
+
 # Baseline policy parameters
 baseline:
   idm:
@@ -162,6 +170,12 @@ baseline:
     politeness_factor: 0.1      # Politeness factor for lane changing
     lane_change_threshold: 0.2  # Threshold for lane change benefit
     max_safe_deceleration: 4.0  # Maximum safe deceleration for others
+    # Aggressiveness controls for selfish policy
+    aggressive_lane_changes: true
+    aggressiveness_factor: 0.5           # Lower -> more lane changes
+    min_safe_distance_aggressive: 8.0    # Accept tighter gaps on target lane
+    passing_proximity_factor: 1.5        # Attempt passes when within 1.5x safe distance
+    lane_change_cooldown_steps: 5        # Cooldown to avoid oscillation
 
 # Metrics collection
 metrics:

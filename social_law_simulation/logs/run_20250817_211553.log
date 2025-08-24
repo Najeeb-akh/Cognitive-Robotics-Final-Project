@@ -1,5 +1,0 @@
-2025-08-17 21:15:53,766 - WARNING - racetrack-v0 reset failed ('functools.partial' object has no attribute 'make_on_lane'). Falling back to highway-v0 emulation for racetrack.
-2025-08-17 21:15:53,774 - INFO - RacetrackSelfishPolicy initialized with aggressive racing parameters
-2025-08-17 21:15:53,774 - INFO - Created RacetrackSelfishPolicy for ego vehicle
-2025-08-17 21:15:53,779 - INFO - Starting simulation with RacetrackSelfishPolicy for 1000 steps
-2025-08-17 21:15:53,779 - ERROR - Error during simulation: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()

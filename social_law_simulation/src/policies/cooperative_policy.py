@@ -82,9 +82,10 @@ class CooperativePolicy(SelfishPolicy):
         if obs is None or len(obs) == 0:
             return 1  # IDLE if no observation
             
-        # Update timer for yielding behavior
+        # Update timer for yielding behavior using a conservative step-based decay
         if self.yielding_timer > 0:
-            self.yielding_timer -= 1/30.0  # Assuming 30 FPS
+            # Assume ~15 Hz policy frequency by default; can be tuned via config if needed
+            self.yielding_timer = max(0.0, self.yielding_timer - 1/15.0)
             
         # Check social law triggers in order of priority
         cooperative_action = None

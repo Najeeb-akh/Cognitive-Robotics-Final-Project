@@ -65,7 +65,12 @@ The `run_simulation.py` script is the main entry point. Here are the most common
 This is the simplest way to reproduce all results. It will run every enabled scenario and composition defined in `config.yaml` and generate the final plots and CSV data.
 
 ```bash
-python run_simulation.py --config config.yaml
+# Basic run with aggregated results and plots
+python run_simulation.py --config config.yaml --output-results results/results.csv --save-plots
+
+# Full batch with multiple runs for statistical robustness
+python run_simulation.py --config config.yaml --runs 10 --seed 123 \
+  --output-results results/results.csv --save-plots
 ```
 
 #### **Option 2: Run a Single Scenario with Live Rendering**
@@ -99,10 +104,15 @@ python run_simulation.py --scenario roundabout --composition cooperative \
 
 ### 4.3. Expected Outputs
 
-After running the simulations (especially Option 1), the following artifacts will be generated:
+After running the simulations (especially Option 1 with `--save-plots`), the following artifacts will be generated:
 
-- **`results/results.csv`**: An aggregated CSV file containing one row of metrics for each simulation run.
-- **`plots/`**: This directory will contain PNG plots comparing the performance of selfish, cooperative, and mixed compositions across all scenarios for key metrics like average speed, collisions, and stability.
+- **`results/results.csv`**: An aggregated CSV file containing metrics grouped by scenario and composition, including sample sizes and statistical summaries (mean ± std).
+- **`plots/`**: This directory will contain enhanced PNG plots with the following features:
+  - **Individual Scenario Plots**: Bar charts for each scenario showing average speed, collisions, acceleration stability, and merge success rates
+  - **Sample Size Annotations**: Each bar displays the number of simulation runs (N=X)
+  - **Delta Annotations**: Percentage changes vs. selfish baseline (e.g., +15.2% for cooperative)
+  - **Combined Comparison Plots**: Multi-scenario efficiency and safety comparisons
+  - **Summary Dashboard**: A comprehensive 4-panel view showing key KPI deltas across all scenarios
 - **`logs/`**: Contains detailed log files for debugging purposes.
 
 ## 5. Project Configuration (`config.yaml`)

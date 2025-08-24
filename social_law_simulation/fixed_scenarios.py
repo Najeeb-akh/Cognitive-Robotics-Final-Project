@@ -240,13 +240,30 @@ def populate_environment_with_agents(env, agent_composition, config):
     # Determine ego vehicle behavior based on composition
     selfish_ratio = agent_composition.get('selfish_ratio', 0.5)
     
-    # For simplicity, make ego vehicle behave according to the majority type
-    if selfish_ratio > 0.5:
+    # Handle different composition types
+    if selfish_ratio == 1.0:
         ego_policy = SelfishAgent
         behavior_type = "selfish"
-    else:
+    elif selfish_ratio == 0.0:
         ego_policy = CooperativeAgent  
         behavior_type = "cooperative"
+    elif selfish_ratio == 0.5:
+        # Mixed composition: randomly choose for each run
+        import random
+        if random.random() < 0.5:
+            ego_policy = SelfishAgent
+            behavior_type = "mixed_selfish"
+        else:
+            ego_policy = CooperativeAgent
+            behavior_type = "mixed_cooperative"
+    else:
+        # Default to majority type for other ratios
+        if selfish_ratio > 0.5:
+            ego_policy = SelfishAgent
+            behavior_type = "selfish"
+        else:
+            ego_policy = CooperativeAgent  
+            behavior_type = "cooperative"
     
     # Create a decentralized vehicle for the ego
     road = env.unwrapped.road

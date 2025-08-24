@@ -51,6 +51,19 @@ class SelfishPolicy:
             self.POLITENESS_FACTOR = 0.1  # Low politeness
             self.LANE_CHANGE_THRESHOLD = 0.2
             self.MAX_SAFE_DECELERATION = 4.0
+        
+        # Aggressiveness controls (lane change eagerness and safety margins)
+        mobil_cfg = (config or {}).get('baseline', {}).get('mobil', {}) if isinstance(config, dict) else {}
+        self.AGGRESSIVE_LANE_CHANGES = bool(mobil_cfg.get('aggressive_lane_changes', True))
+        # Lower threshold => more likely to change lanes. 0.5 means half the base threshold
+        self.AGGRESSIVENESS_FACTOR = float(mobil_cfg.get('aggressiveness_factor', 0.5))
+        # Shorter distance allowed to nearby cars in target lane when aggressive
+        self.MIN_SAFE_DISTANCE_AGGR = float(mobil_cfg.get('min_safe_distance_aggressive', 8.0))
+        # When blocked, how far ahead of safe distance before attempting a pass
+        self.PASSING_PROXIMITY_FACTOR = float(mobil_cfg.get('passing_proximity_factor', 1.5))
+        # Cooldown to avoid oscillatory lane switching
+        self.LANE_CHANGE_COOLDOWN_STEPS = int(mobil_cfg.get('lane_change_cooldown_steps', 5))
+        self._lane_change_cooldown = 0
     
     def act(self, obs):
         """
@@ -68,18 +81,40 @@ class SelfishPolicy:
         if obs is None or len(obs) == 0:
             return 1  # IDLE if no observation
         
-        # Prioritize speed control over lane changes for more stable behavior
+        # Decrease cooldown timer
+        if self._lane_change_cooldown > 0:
+            self._lane_change_cooldown -= 1
+
+        # Prioritize speed control but allow aggressive passing attempts when blocked
         speed_action = self._determine_speed_action_from_obs(obs)
         
-        # Only consider lane changes if current speed situation is acceptable
-        if speed_action == 1:  # IDLE - speed is fine, consider lane change
+        # Aggressive passing: if blocked by a front vehicle, attempt lane change first
+        if self.AGGRESSIVE_LANE_CHANGES and len(obs) >= 2 and self._lane_change_cooldown == 0:
+            ego_info = obs[0]
+            ego_speed = ego_info[3] if len(ego_info) > 3 else 20.0
+            front_vehicle = self._find_front_vehicle_from_obs(obs)
+            if front_vehicle is not None:
+                distance = max(abs(front_vehicle[1]), 2.0)
+                safe_distance = self.MINIMUM_SPACING + self.TIME_HEADWAY * ego_speed
+                # If we're closer than a multiple of the safe distance, try to pass
+                if distance < safe_distance * self.PASSING_PROXIMITY_FACTOR:
+                    lane_change_direction = self._mobil_lane_change_from_obs(obs)
+                    if lane_change_direction == -1:
+                        self._lane_change_cooldown = self.LANE_CHANGE_COOLDOWN_STEPS
+                        return 0  # LANE_LEFT
+                    elif lane_change_direction == 1:
+                        self._lane_change_cooldown = self.LANE_CHANGE_COOLDOWN_STEPS
+                        return 2  # LANE_RIGHT
+
+        # Otherwise, consider lane change when cruising
+        if speed_action == 1 and self._lane_change_cooldown == 0:
             lane_change_direction = self._mobil_lane_change_from_obs(obs)
-            
-            # Convert to highway-env action format
-            if lane_change_direction == -1:  # Change to left lane
-                return 0  # LANE_LEFT
-            elif lane_change_direction == 1:  # Change to right lane
-                return 2  # LANE_RIGHT
+            if lane_change_direction == -1:
+                self._lane_change_cooldown = self.LANE_CHANGE_COOLDOWN_STEPS
+                return 0
+            elif lane_change_direction == 1:
+                self._lane_change_cooldown = self.LANE_CHANGE_COOLDOWN_STEPS
+                return 2
         
         # Default to speed action (more stable)
         return speed_action
@@ -156,14 +191,20 @@ class SelfishPolicy:
         left_benefit = left_utility - current_utility
         right_benefit = right_utility - current_utility
         
-        # Make lane changes more conservative by increasing threshold and adding cooldown
-        higher_threshold = self.LANE_CHANGE_THRESHOLD * 2.0  # More conservative threshold
+        # Threshold for lane-change benefit
+        if self.AGGRESSIVE_LANE_CHANGES:
+            benefit_threshold = max(0.0, self.LANE_CHANGE_THRESHOLD * self.AGGRESSIVENESS_FACTOR)
+        else:
+            benefit_threshold = self.LANE_CHANGE_THRESHOLD * 2.0  # Conservative
         
-        # Check if lane change is safe and beneficial
-        if left_benefit > higher_threshold and self._is_lane_change_safe_from_obs(left_vehicles):
-            return -1
-        elif right_benefit > higher_threshold and self._is_lane_change_safe_from_obs(right_vehicles):
-            return 1
+        # Prefer the side with higher benefit when both exceed threshold
+        choice = 0
+        if left_benefit > benefit_threshold and self._is_lane_change_safe_from_obs(left_vehicles):
+            choice = -1
+        if right_benefit > benefit_threshold and self._is_lane_change_safe_from_obs(right_vehicles):
+            if choice == 0 or right_benefit > left_benefit:
+                choice = 1
+        return choice
         
         return 0  # Stay in current lane
     
@@ -280,7 +321,8 @@ class SelfishPolicy:
         Returns:
             bool: True if safe, False otherwise
         """
-        min_safe_distance = 15.0  # Minimum safe distance in meters
+        # Lower safety distance when aggressive to accept tighter gaps
+        min_safe_distance = self.MIN_SAFE_DISTANCE_AGGR if self.AGGRESSIVE_LANE_CHANGES else 15.0
         
         for vehicle in vehicles:
             distance = abs(vehicle[1])  # Distance to vehicle

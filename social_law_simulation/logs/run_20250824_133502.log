@@ -1,0 +1,51 @@
+2025-08-24 13:35:02,629 - INFO - Running 5 runs for intersection scenario with cooperative composition
+2025-08-24 13:35:03,350 - INFO - Created intersection-v0 environment
+2025-08-24 13:35:03,351 - INFO - Population overrides: cooperative_set=0/6, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:35:03,403 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-24 13:35:03,403 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-24 13:35:03,449 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-24 13:35:03,584 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-24 13:35:03,584 - INFO - Step 0/1000 completed
+2025-08-24 13:35:04,150 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-24 13:35:04,150 - INFO - Info: {'speed': 24.144101487100222, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9144101487100222), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-24 13:35:04,150 - INFO - Simulation completed successfully
+2025-08-24 13:35:04,377 - INFO - Created intersection-v0 environment
+2025-08-24 13:35:04,377 - INFO - Population overrides: cooperative_set=0/4, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:35:04,420 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-24 13:35:04,420 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-24 13:35:04,457 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-24 13:35:04,620 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-24 13:35:04,620 - INFO - Step 0/1000 completed
+2025-08-24 13:35:05,024 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-24 13:35:05,024 - INFO - Info: {'speed': 24.137030798171082, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9137030798171082), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-24 13:35:05,025 - INFO - Simulation completed successfully
+2025-08-24 13:35:05,242 - INFO - Created intersection-v0 environment
+2025-08-24 13:35:05,242 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:35:05,290 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-24 13:35:05,290 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-24 13:35:05,312 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-24 13:35:05,440 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-24 13:35:05,440 - INFO - Step 0/1000 completed
+2025-08-24 13:35:05,828 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-24 13:35:05,828 - INFO - Info: {'speed': 29.132766783821975, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-24 13:35:05,828 - INFO - Simulation completed successfully
+2025-08-24 13:35:06,060 - INFO - Created intersection-v0 environment
+2025-08-24 13:35:06,060 - INFO - Population overrides: cooperative_set=0/5, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:35:06,109 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-24 13:35:06,109 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-24 13:35:06,131 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-24 13:35:06,261 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-24 13:35:06,262 - INFO - Step 0/1000 completed
+2025-08-24 13:35:06,661 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-24 13:35:06,661 - INFO - Info: {'speed': 24.137030798171082, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9137030798171082), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-24 13:35:06,661 - INFO - Simulation completed successfully
+2025-08-24 13:35:06,859 - INFO - Created intersection-v0 environment
+2025-08-24 13:35:06,860 - INFO - Population overrides: cooperative_set=0/5, baseline_set=0/0 (composition=cooperative)
+2025-08-24 13:35:06,908 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-24 13:35:06,908 - INFO - Created IntersectionCooperativePolicy for ego vehicle
+2025-08-24 13:35:06,945 - INFO - Starting simulation with IntersectionCooperativePolicy for 1000 steps
+2025-08-24 13:35:07,096 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-24 13:35:07,096 - INFO - Step 0/1000 completed
+2025-08-24 13:35:07,400 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-24 13:35:07,401 - INFO - Info: {'speed': 9.278067740220912, 'crashed': True, 'action': 1, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-24 13:35:07,401 - INFO - Simulation completed successfully

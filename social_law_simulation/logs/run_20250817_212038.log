@@ -1,5 +1,0 @@
-2025-08-17 21:20:38,500 - INFO - Created racetrack-v0 environment
-2025-08-17 21:20:38,501 - INFO - RacetrackSelfishPolicy initialized with aggressive racing parameters
-2025-08-17 21:20:38,501 - INFO - Created RacetrackSelfishPolicy for ego vehicle
-2025-08-17 21:20:38,504 - INFO - Starting simulation with RacetrackSelfishPolicy for 1000 steps
-2025-08-17 21:20:38,504 - ERROR - Error during simulation: invalid index to scalar variable.
