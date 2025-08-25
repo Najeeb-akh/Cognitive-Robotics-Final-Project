@@ -302,7 +302,7 @@ class RoundaboutCooperativePolicy(CooperativePolicy):
         # Analyze front vehicle for spacing adjustment
         if len(obs) > 1:
             front_vehicle = self._find_front_vehicle_roundabout(obs)
-            if front_vehicle:
+            if front_vehicle is not None:
                 distance = abs(front_vehicle[1])  # Relative x distance
                 target_distance = self.target_spacing_factor * 10  # Target spacing
                 
@@ -347,7 +347,7 @@ class RoundaboutCooperativePolicy(CooperativePolicy):
         # In roundabout - maintain steady progress
         front_vehicle = self._find_front_vehicle_roundabout(obs)
         
-        if front_vehicle:
+        if front_vehicle is not None:
             distance = abs(front_vehicle[1])
             if distance < 15:  # Too close
                 return 4  # SLOWER

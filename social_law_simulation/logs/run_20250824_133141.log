@@ -1,8 +1,0 @@
-2025-08-24 13:31:41,612 - INFO - Running 5 runs for highway scenario with cooperative composition
-2025-08-24 13:31:42,359 - INFO - Population overrides: cooperative_set=0/50, baseline_set=0/0 (composition=cooperative)
-2025-08-24 13:31:42,370 - INFO - Created CooperativePolicy for ego vehicle
-2025-08-24 13:31:42,380 - INFO - Starting simulation with CooperativePolicy for 1000 steps
-2025-08-24 13:31:42,636 - INFO - [EGO] step=0 speed=29.1455588268693 lane_index=('0', '1', 0) crashed=False
-2025-08-24 13:31:42,636 - INFO - Step 0/1000 completed
-2025-08-24 13:31:55,267 - INFO - [EGO] step=50 speed=24.85398605633181 lane_index=('0', '1', 0) crashed=False
-2025-08-24 13:32:08,048 - INFO - [EGO] step=100 speed=20.000000000000014 lane_index=('0', '1', 0) crashed=False

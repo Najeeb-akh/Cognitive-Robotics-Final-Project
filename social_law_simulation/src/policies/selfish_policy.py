@@ -145,12 +145,10 @@ class SelfishPolicy:
             else:
                 return 1  # IDLE
         
-        # Calculate distance and relative speed
-        rel_x = front_vehicle[1]  # Relative x position 
-        rel_vx = front_vehicle[3] - ego_info[3]  # Relative velocity
-        
-        # Convert relative position to actual distance
-        distance = max(abs(rel_x), 2.0)  # Minimum safe distance
+        # Calculate longitudinal distance using ego-relative position
+        ego_x = ego_info[1] if len(ego_info) > 1 else 0.0
+        front_x = front_vehicle[1]
+        distance = max(front_x - ego_x, 2.0)  # ensure positive minimum safe distance
         
         # Simple following logic based on distance and speed difference
         safe_distance = self.MINIMUM_SPACING + self.TIME_HEADWAY * ego_speed
@@ -218,15 +216,17 @@ class SelfishPolicy:
         Returns:
             array or None: Front vehicle observation or None if not found
         """
-        ego_y = obs[0][2] if len(obs[0]) > 2 else 0  # Ego y position
+        ego_x = obs[0][1] if len(obs[0]) > 1 else 0
+        ego_y = obs[0][2] if len(obs[0]) > 2 else 0
         
         front_vehicles = []
         for i in range(1, len(obs)):
             vehicle = obs[i]
             if vehicle[0] == 1:  # Vehicle present
-                rel_x, rel_y = vehicle[1], vehicle[2]
-                # Check if vehicle is ahead (positive x) and in same lane (similar y)
-                if rel_x > 0 and abs(rel_y) < 2.0:  # Same lane threshold
+                x, y = vehicle[1], vehicle[2]
+                rel_x, rel_y = x - ego_x, y - ego_y
+                # Check if vehicle is ahead (positive rel x) and in same lane (nearby rel y)
+                if rel_x > 0 and abs(rel_y) < 2.0:
                     front_vehicles.append((rel_x, vehicle))
         
         if front_vehicles:
@@ -247,15 +247,24 @@ class SelfishPolicy:
             list: List of vehicles in adjacent lane
         """
         vehicles = []
-        lane_width = 4.0  # Typical highway lane width
-        target_y = direction * lane_width
+        lane_width = 4.0  # Default; may be overridden via runtime override
+        # Allow runtime override if a previous call injected an attribute
+        try:
+            if hasattr(self, '_lane_width_override') and self._lane_width_override:
+                lane_width = float(self._lane_width_override)
+        except Exception:
+            pass
+        ego_x = obs[0][1] if len(obs[0]) > 1 else 0
+        ego_y = obs[0][2] if len(obs[0]) > 2 else 0
+        target_rel_y = direction * lane_width
         
         for i in range(1, len(obs)):
             vehicle = obs[i]
             if vehicle[0] == 1:  # Vehicle present
-                rel_x, rel_y = vehicle[1], vehicle[2]
-                # Check if vehicle is in target adjacent lane
-                if abs(rel_y - target_y) < 2.0:  # Lane tolerance
+                x, y = vehicle[1], vehicle[2]
+                rel_y = y - ego_y
+                # Check if vehicle is in target adjacent lane relative to ego
+                if abs(rel_y - target_rel_y) < 2.0:
                     vehicles.append(vehicle)
         
         return vehicles
@@ -274,8 +283,9 @@ class SelfishPolicy:
         if front_vehicle is None:
             return 0.8  # Good but not perfect utility if no obstacles
         
-        distance = abs(front_vehicle[1])  # Distance to front vehicle
-        rel_speed = front_vehicle[3] - ego_info[3]  # Relative speed
+        ego_x = ego_info[1] if len(ego_info) > 1 else 0
+        distance = abs(front_vehicle[1] - ego_x)  # Distance ahead along x
+        rel_speed = front_vehicle[3] - ego_info[3]  # Relative speed (vx)
         
         # More conservative utility calculation
         utility = (distance / 100.0) + (rel_speed / 20.0)  # Scaled down
@@ -299,8 +309,9 @@ class SelfishPolicy:
         front_vehicle = None
         min_distance = float('inf')
         
+        ego_x = ego_info[1] if len(ego_info) > 1 else 0
         for vehicle in vehicles:
-            rel_x = vehicle[1]
+            rel_x = vehicle[1] - ego_x
             if rel_x > 0 and rel_x < min_distance:  # Vehicle ahead
                 min_distance = rel_x
                 front_vehicle = vehicle
@@ -324,8 +335,9 @@ class SelfishPolicy:
         # Lower safety distance when aggressive to accept tighter gaps
         min_safe_distance = self.MIN_SAFE_DISTANCE_AGGR if self.AGGRESSIVE_LANE_CHANGES else 15.0
         
+        ego_x = ego_info[1] if (ego_info is not None and len(ego_info) > 1) else 0
         for vehicle in vehicles:
-            distance = abs(vehicle[1])  # Distance to vehicle
+            distance = abs((vehicle[1] - ego_x))  # Longitudinal gap proxy
             if distance < min_safe_distance:
                 return False
         

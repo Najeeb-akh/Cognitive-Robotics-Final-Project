@@ -402,7 +402,7 @@ class RacetrackCooperativePolicy(CooperativePolicy):
         # High-speed navigation logic
         target_speed = 35  # High target speed for racetrack
         
-        if context['front_vehicle']:
+        if context['front_vehicle'] is not None:
             front_distance = context['front_vehicle']['distance']
             
             if front_distance < 20:  # Too close at high speed

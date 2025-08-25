@@ -65,6 +65,18 @@ class CooperativePolicy(SelfishPolicy):
         # State for tracking cooperative behaviors
         self.yielding_timer = 0.0
         self.cooperative_behavior_active = False
+        # Timebase derived from policy_frequency when available
+        try:
+            sim_cfg = (config or {}).get('simulation', {}) if isinstance(config, dict) else {}
+            pf = float(sim_cfg.get('policy_frequency')) if sim_cfg.get('policy_frequency') is not None else None
+            self._dt = (1.0 / pf) if (pf and pf > 0) else None
+        except Exception:
+            self._dt = None
+        # Lane geometry (lane width) can be provided via config override
+        try:
+            self._lane_width_override = float((config or {}).get('environment', {}).get('lane_width', None))
+        except Exception:
+            self._lane_width_override = None
     
     def act(self, obs):
         """
@@ -82,10 +94,10 @@ class CooperativePolicy(SelfishPolicy):
         if obs is None or len(obs) == 0:
             return 1  # IDLE if no observation
             
-        # Update timer for yielding behavior using a conservative step-based decay
+        # Update timer for yielding behavior using configured policy_frequency when available
         if self.yielding_timer > 0:
-            # Assume ~15 Hz policy frequency by default; can be tuned via config if needed
-            self.yielding_timer = max(0.0, self.yielding_timer - 1/15.0)
+            dt = self._dt if self._dt else (1.0/15.0)
+            self.yielding_timer = max(0.0, self.yielding_timer - dt)
             
         # Check social law triggers in order of priority
         cooperative_action = None
@@ -128,8 +140,9 @@ class CooperativePolicy(SelfishPolicy):
         # Look for vehicles in right lane (typical merge scenario)
         right_lane_vehicles = self._find_vehicles_in_adjacent_lane(obs, 1)  # Right lane
         
+        ego_x = obs[0][1] if len(obs[0]) > 1 else 0
         for vehicle in right_lane_vehicles:
-            rel_x, rel_y = vehicle[1], vehicle[2]
+            rel_x = vehicle[1] - ego_x
             
             # Check if vehicle is attempting to merge (slightly ahead and moving toward our lane)
             if 0 < rel_x < self.MERGE_DETECTION_DISTANCE:
@@ -250,10 +263,13 @@ class CooperativePolicy(SelfishPolicy):
         local_range = 100.0  # meters
         vehicles_in_range = 0
         
+        ego_x = obs[0][1] if len(obs[0]) > 1 else 0
+        ego_y = obs[0][2] if len(obs[0]) > 2 else 0
         for i in range(1, len(obs)):
             vehicle = obs[i]
             if vehicle[0] == 1:  # Vehicle present
-                rel_x, rel_y = vehicle[1], vehicle[2]
+                x, y = vehicle[1], vehicle[2]
+                rel_x, rel_y = x - ego_x, y - ego_y
                 # Check if vehicle is in same lane and within range
                 if abs(rel_y) < 2.0 and abs(rel_x) < local_range:  # Same lane
                     vehicles_in_range += 1
@@ -319,8 +335,9 @@ class CooperativePolicy(SelfishPolicy):
         if front_vehicle is None:
             return False  # Plenty of space if no vehicle ahead
             
-        # Calculate available space between ego and front vehicle
-        available_space = abs(front_vehicle[1])  # Distance to front vehicle
+        # Calculate available space between ego and front vehicle (ego-relative)
+        ego_x = ego_info[1] if len(ego_info) > 1 else 0.0
+        available_space = max(front_vehicle[1] - ego_x, 0.0)
         
         # Get vehicle speeds with fallbacks
         merge_speed = abs(merging_vehicle[3]) if len(merging_vehicle) > 3 else 20.0

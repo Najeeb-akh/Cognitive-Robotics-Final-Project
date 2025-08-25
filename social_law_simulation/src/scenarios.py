@@ -44,12 +44,14 @@ def create_highway_scenario(config, render_mode='rgb_array'):
                 "vx": [-20, 20],
                 "vy": [-20, 20]
             },
-            "absolute": False,
+            "absolute": True,
             "order": "sorted",
+            "see_ego": True,
             "normalize": False  # Use physical units so policy thresholds apply
         },
         "action": {
             "type": "DiscreteMetaAction",
+            "actions": ["IDLE", "LANE_LEFT", "LANE_RIGHT", "FASTER", "SLOWER"],
         },
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "lanes_count": env_config.get('lanes_count', 4),
@@ -57,8 +59,6 @@ def create_highway_scenario(config, render_mode='rgb_array'):
         "controlled_vehicles": 1,
         "initial_lane_id": env_config.get('initial_lane_id', None),
         "duration": env_config.get('duration', 200),  # Increased from 40 to allow longer episodes
-        "ego_spacing": 2,
-        "vehicles_density": 1,
         "collision_reward": -1,
         "right_lane_reward": 0.1,
         "high_speed_reward": 0.4,
@@ -66,12 +66,18 @@ def create_highway_scenario(config, render_mode='rgb_array'):
         "reward_speed_range": [20, 30],
         "normalize_reward": True,
         "offroad_terminal": False,
-        "collision_termination": False
+        # Rely on default collision termination behavior from highway-env
     }
     
-    # Create environment and configure it
-    env = gym.make('highway-v0', render_mode=render_mode)
-    env.unwrapped.configure(highway_config)
+    # Create environment and configure it (prefer v1, fallback to v0)
+    try:
+        env = gym.make('highway-v1', render_mode=render_mode)
+        env.unwrapped.configure(highway_config)
+        logging.info("Created highway-v1 environment")
+    except Exception as e:
+        logging.warning(f"highway-v1 not available ({e}), using highway-v0")
+        env = gym.make('highway-v0', render_mode=render_mode)
+        env.unwrapped.configure(highway_config)
     return env
 
 
@@ -104,12 +110,14 @@ def create_merge_scenario(config, render_mode='rgb_array'):
                 "vx": [-20, 20],
                 "vy": [-20, 20]
             },
-            "absolute": False,
+            "absolute": True,
             "order": "sorted",
+            "see_ego": True,
             "normalize": False  # Use physical units so policy thresholds apply
         },
         "action": {
             "type": "DiscreteMetaAction",
+            "actions": ["IDLE", "LANE_LEFT", "LANE_RIGHT", "FASTER", "SLOWER"],
         },
         "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
         "lanes_count": env_config.get('lanes_count', 3),
@@ -117,8 +125,6 @@ def create_merge_scenario(config, render_mode='rgb_array'):
         "controlled_vehicles": 1,
         "initial_lane_id": env_config.get('initial_lane_id', None),
         "duration": env_config.get('duration', 200),  # Increased from 40 to allow longer episodes
-        "ego_spacing": 2,
-        "vehicles_density": 1,
         "collision_reward": -1,
         "right_lane_reward": 0.1,
         "high_speed_reward": 0.4,
@@ -126,43 +132,173 @@ def create_merge_scenario(config, render_mode='rgb_array'):
         "reward_speed_range": [20, 30],
         "normalize_reward": True,
         "offroad_terminal": False,
-        "collision_termination": False,
-        "merging_lane_spawn_probability": 0.2,  # Probability of spawning in merge lane
-        "merging_speed_ratio": 0.8,  # Speed ratio for merging vehicles
-        "simulation_frequency": 15,  # Lower frequency to allow longer episodes
-        "policy_frequency": 3,  # Reduce policy calls frequency
+        # Keep standard frequencies unless overridden in env defaults/config
+        # "simulation_frequency": 15,
+        # "policy_frequency": 3,
         "screen_width": 600,
         "screen_height": 150,
         "centering_position": [0.3, 0.5],
-        "real_time_rendering": False
+        # Rendering options managed externally
     }
     
-    # Create environment and configure it
-    env = gym.make('merge-v0', render_mode=render_mode)
-    env.unwrapped.configure(merge_config)
+    # Create environment and configure it (prefer v1, fallback to v0)
+    try:
+        env = gym.make('merge-v1', render_mode=render_mode)
+        env.unwrapped.configure(merge_config)
+        logging.info("Created merge-v1 environment")
+    except Exception as e:
+        logging.warning(f"merge-v1 not available ({e}), using merge-v0")
+        env = gym.make('merge-v0', render_mode=render_mode)
+        env.unwrapped.configure(merge_config)
     return env
 
 
-def populate_environment_with_agents(env, agent_composition, config):
+def create_intersection_scenario(config, render_mode='rgb_array'):
     """
-    DEPRECATED: This function is no longer needed with the new policy-based architecture.
-    
-    The new architecture uses policy classes (SelfishPolicy, CooperativePolicy) 
-    that work directly with highway-env's standard gymnasium interface instead
-    of replacing vehicle objects.
-    
-    This function is kept for compatibility but does nothing.
-    
-    Args:
-        env (gym.Env): Environment (unused)
-        agent_composition (dict): Dict with ratios (unused)
-        config (dict): Configuration dictionary (unused)
-        
-    Returns:
-        list: Empty list (no agents needed)
+    Create Intersection Scenario: Multi-directional traffic coordination
     """
-    logging.warning("populate_environment_with_agents() is deprecated - using policy-based architecture")
-    return []
+    env_config = config.get('environment', {}).get('intersection', {})
+    intersection_config = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 20,
+            "features": ["presence", "x", "y", "vx", "vy"],
+            "features_range": {"x": [-150, 150], "y": [-150, 150], "vx": [-25, 25], "vy": [-25, 25]},
+            "absolute": True,
+            "order": "sorted",
+            "see_ego": True,
+            "normalize": False
+        },
+        "action": {"type": "DiscreteMetaAction",
+                    "actions": ["IDLE", "LANE_LEFT", "LANE_RIGHT", "FASTER", "SLOWER"]},
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "lanes_count": 4,
+        "vehicles_count": env_config.get('vehicles_count', 60),
+        "controlled_vehicles": 1,
+        "initial_lane_id": env_config.get('initial_lane_id', None),
+        "duration": env_config.get('duration', 50),
+        "ego_spacing": 2,
+        "collision_reward": -2,
+        "right_lane_reward": 0.05,
+        "high_speed_reward": 0.3,
+        "lane_change_reward": -0.1,
+        "reward_speed_range": [15, 25],
+        "normalize_reward": True,
+        "offroad_terminal": False,
+    }
+    try:
+        env = gym.make('intersection-v1', render_mode=render_mode)
+        env.unwrapped.configure(intersection_config)
+        logging.info("Created intersection-v1 environment")
+    except Exception as e:
+        logging.warning(f"intersection-v1 not available ({e}), falling back to v0")
+        try:
+            env = gym.make('intersection-v0', render_mode=render_mode)
+            env.unwrapped.configure(intersection_config)
+            logging.info("Created intersection-v0 environment")
+        except Exception as e2:
+            logging.warning(f"intersection-v0 not available ({e2}), using modified highway-v0")
+            env = gym.make('highway-v0', render_mode=render_mode)
+            env.unwrapped.configure(intersection_config)
+    return env
+
+
+def create_roundabout_scenario(config, render_mode='rgb_array'):
+    """
+    Create Roundabout Scenario: Circular traffic coordination
+    """
+    env_config = config.get('environment', {}).get('roundabout', {})
+    roundabout_config = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 18,
+            "features": ["presence", "x", "y", "vx", "vy"],
+            "features_range": {"x": [-120, 120], "y": [-120, 120], "vx": [-20, 20], "vy": [-20, 20]},
+            "absolute": True,
+            "order": "sorted",
+            "see_ego": True,
+            "normalize": False
+        },
+        "action": {"type": "DiscreteMetaAction",
+                    "actions": ["IDLE", "LANE_LEFT", "LANE_RIGHT", "FASTER", "SLOWER"]},
+        "lanes_count": env_config.get('lane_count', 2),
+        "vehicles_count": env_config.get('vehicles_count', 45),
+        "controlled_vehicles": 1,
+        "initial_lane_id": env_config.get('initial_lane_id', None),
+        "duration": env_config.get('duration', 45),
+        "ego_spacing": 2,
+        "collision_reward": -1.5,
+        "right_lane_reward": 0.1,
+        "high_speed_reward": 0.35,
+        "lane_change_reward": -0.05,
+        "reward_speed_range": [20, 30],
+        "normalize_reward": True,
+        "offroad_terminal": False,
+    }
+    try:
+        env = gym.make('roundabout-v1', render_mode=render_mode)
+        env.unwrapped.configure(roundabout_config)
+        logging.info("Created roundabout-v1 environment")
+    except Exception as e:
+        logging.warning(f"roundabout-v1 not available ({e}), using roundabout-v0")
+        try:
+            env = gym.make('roundabout-v0', render_mode=render_mode)
+            env.unwrapped.configure(roundabout_config)
+            logging.info("Created roundabout-v0 environment")
+        except Exception as e2:
+            logging.warning(f"roundabout-v0 not available ({e2}), using modified highway-v0")
+            env = gym.make('highway-v0', render_mode=render_mode)
+            env.unwrapped.configure(roundabout_config)
+    return env
+
+
+def create_racetrack_scenario(config, render_mode='rgb_array'):
+    """
+    Create Racetrack Scenario: High-speed overtaking coordination
+    """
+    env_config = config.get('environment', {}).get('racetrack', {})
+    racetrack_config = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 12,
+            "features": ["presence", "x", "y", "vx", "vy"],
+            "features_range": {"x": [-200, 200], "y": [-100, 100], "vx": [-40, 40], "vy": [-20, 20]},
+            "absolute": True,
+            "order": "sorted",
+            "see_ego": True,
+            "normalize": False
+        },
+        "action": {"type": "DiscreteMetaAction",
+                    "actions": ["IDLE", "LANE_LEFT", "LANE_RIGHT", "FASTER", "SLOWER"]},
+        "lanes_count": env_config.get('lane_count', 3),
+        "vehicles_count": env_config.get('vehicles_count', 25),
+        "controlled_vehicles": 1,
+        "initial_lane_id": env_config.get('initial_lane_id', None),
+        "duration": env_config.get('duration', 60),
+        "ego_spacing": 3,
+        "collision_reward": -3,
+        "right_lane_reward": 0.0,
+        "high_speed_reward": 0.6,
+        "lane_change_reward": 0.1,
+        "reward_speed_range": [25, 40],
+        "normalize_reward": True,
+        "offroad_terminal": False,
+    }
+    try:
+        env = gym.make('racetrack-v1', render_mode=render_mode)
+        env.unwrapped.configure(racetrack_config)
+        logging.info("Created racetrack-v1 environment")
+    except Exception as e:
+        logging.warning(f"racetrack-v1 not available ({e}), using racetrack-v0")
+        try:
+            env = gym.make('racetrack-v0', render_mode=render_mode)
+            env.unwrapped.configure(racetrack_config)
+            logging.info("Created racetrack-v0 environment")
+        except Exception as e2:
+            logging.warning(f"racetrack-v0 not available ({e2}), using modified highway-v0")
+            env = gym.make('highway-v0', render_mode=render_mode)
+            env.unwrapped.configure(racetrack_config)
+    return env
 
 
 def get_scenario_configurations():
@@ -179,8 +315,17 @@ def get_scenario_configurations():
         ("Merge_100_Selfish", create_merge_scenario, {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}),
         ("Merge_100_Cooperative", create_merge_scenario, {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}),
         ("Merge_50_50_Mix", create_merge_scenario, {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}),
+        ("Intersection_100_Selfish", create_intersection_scenario, {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}),
+        ("Intersection_100_Cooperative", create_intersection_scenario, {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}),
+        ("Intersection_50_50_Mix", create_intersection_scenario, {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}),
+        ("Roundabout_100_Selfish", create_roundabout_scenario, {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}),
+        ("Roundabout_100_Cooperative", create_roundabout_scenario, {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}),
+        ("Roundabout_50_50_Mix", create_roundabout_scenario, {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}),
+        ("Racetrack_100_Selfish", create_racetrack_scenario, {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}),
+        ("Racetrack_100_Cooperative", create_racetrack_scenario, {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}),
+        ("Racetrack_50_50_Mix", create_racetrack_scenario, {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}),
     ]
-    
+
     return scenarios
 
 

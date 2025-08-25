@@ -104,18 +104,87 @@ class IntersectionCooperativePolicy(CooperativePolicy):
         # Analyze intersection context
         intersection_context = self._analyze_intersection_context(obs)
         
-        # Check for intersection-specific social law opportunities
+        # Use ETA-based proceed/yield near the intersection to avoid symmetric yielding.
+        ego = intersection_context['ego_position']
+        at_intersection = bool(intersection_context['approaching_intersection'])
+        if at_intersection:
+            ego_x = float(ego.get('x', 0.0))
+            ego_y = float(ego.get('y', 0.0))
+            ego_vx = float(ego.get('vx', 0.0))
+            ego_vy = float(ego.get('vy', 0.0))
+            ego_eta = self._eta_to_center(ego_x, ego_y, ego_vx, ego_vy)
+
+            # Determine current travel axis and forward direction
+            along_x = abs(ego_vx) >= abs(ego_vy)
+            dir_x = 1.0 if ego_vx >= 0.0 else -1.0
+            dir_y = 1.0 if ego_vy >= 0.0 else -1.0
+
+            # Filter conflicts with a tighter box near center and only vehicles in front moving toward center
+            conflicts = []
+            for v in intersection_context.get('conflict_vehicles', []):
+                try:
+                    vx = float(v.get('vx', 0.0))
+                    vy = float(v.get('vy', 0.0))
+                    # Only consider if moving toward the intersection center (origin)
+                    if (float(v['x']) * vx + float(v['y']) * vy) >= -1.0:
+                        continue
+                    # In-front gating relative to ego motion
+                    if along_x:
+                        if ((float(v['x']) - ego_x) * dir_x) < -1.0:
+                            continue
+                    else:
+                        if ((float(v['y']) - ego_y) * dir_y) < -1.0:
+                            continue
+                    dx = float(v['x']) - ego_x
+                    dy = float(v['y']) - ego_y
+                    if abs(dx) < 18.0 and abs(dy) < 6.0:
+                        peer_eta = self._eta_to_center(float(v['x']), float(v['y']), vx, vy)
+                        conflicts.append((peer_eta, v))
+                except Exception:
+                    continue
+
+            action = 1  # default: IDLE/coast through box
+            if conflicts:
+                # Consider the most imminent peer
+                conflicts.sort(key=lambda t: t[0])
+                peer_eta, v = conflicts[0]
+                decision = self._tie_break_priority(ego_eta, peer_eta, ego_index=0, peer_index=int(v.get('index', 1)))
+
+                if decision == "yield":
+                    # Rear-gap guard: avoid yielding if follower is too close in time headway
+                    if not self._has_safe_rear_gap(obs, ego_x, ego_y, ego_vx, ego_vy):
+                        action = 3  # FASTER: proactively clear to avoid rear-end
+                    else:
+                        if self.yielding_timer <= 0:
+                            self.yielding_timer = 0.6  # shorter persistence to avoid lock-ins
+                        action = 4  # SLOWER
+                else:
+                    # Proceed decisively when we have priority
+                    action = 3  # FASTER
+
+            self._update_intersection_state(action)
+            return action
+
+        # Check for intersection-specific social law opportunities when not in the critical zone
         if self._should_provide_gap_for_turner(intersection_context):
-            return self._execute_gap_provision_maneuver(obs)
+            action = self._execute_gap_provision_maneuver(obs)
+            self._update_intersection_state(action)
+            return action
         
         if self._should_facilitate_turn_taking(intersection_context):
-            return self._execute_turn_taking_assistance(obs)
+            action = self._execute_turn_taking_assistance(obs)
+            self._update_intersection_state(action)
+            return action
         
         if self._should_apply_adaptive_right_of_way(intersection_context):
-            return self._execute_adaptive_right_of_way(obs)
+            action = self._execute_adaptive_right_of_way(obs)
+            self._update_intersection_state(action)
+            return action
         
-        # Fall back to base cooperative policy
-        return super().act(obs)
+        # Fall back to safe speed-only control (suppress lateral moves near intersections)
+        action = self._determine_speed_action_from_obs(obs)
+        self._update_intersection_state(action)
+        return action
     
     def _analyze_intersection_context(self, obs):
         """
@@ -150,7 +219,8 @@ class IntersectionCooperativePolicy(CooperativePolicy):
         
         # Detect if approaching intersection (simplified heuristic)
         # In a real intersection, this would use more sophisticated detection
-        context['approaching_intersection'] = abs(context['ego_position']['x']) < 50
+        context['approaching_intersection'] = (abs(context['ego_position']['x']) < 35 and
+                                               abs(context['ego_position']['y']) < 15)
         
         # Analyze other vehicles
         for i in range(1, len(obs)):
@@ -308,6 +378,125 @@ class IntersectionCooperativePolicy(CooperativePolicy):
             self.consecutive_through_count += 1
         elif action == 4:  # SLOWER (yielding behavior)
             self.consecutive_through_count = max(0, self.consecutive_through_count - 1)
+
+    def _min_ttc_with_conflicts(self, obs, context):
+        """
+        Compute minimum time-to-collision with conflict vehicles using simple
+        closing-velocity approximation. Returns None if no closing conflicts.
+        """
+        try:
+            ego = context.get('ego_position') or {}
+            ex = float(ego.get('x', 0.0))
+            ey = float(ego.get('y', 0.0))
+            evx = float(ego.get('vx', 0.0))
+            evy = float(ego.get('vy', 0.0))
+        except Exception:
+            ex = ey = evx = evy = 0.0
+        min_ttc = None
+        for v in context.get('conflict_vehicles', []):
+            try:
+                rx = float(v['x']) - ex
+                ry = float(v['y']) - ey
+                rvx = float(v['vx']) - evx
+                rvy = float(v['vy']) - evy
+                r2 = rx * rx + ry * ry
+                if r2 < 1e-6:
+                    continue
+                rmag = np.sqrt(r2)
+                closing_speed = -(rx * rvx + ry * rvy) / rmag
+                if closing_speed > 0.5:  # Only consider meaningful closing
+                    ttc = rmag / closing_speed
+                    if min_ttc is None or ttc < min_ttc:
+                        min_ttc = ttc
+            except Exception:
+                continue
+        return min_ttc
+
+    def _has_close_conflict(self, context, x_thresh=25.0, y_thresh=10.0):
+        """Return True if any conflict vehicle is within a rectangular proximity box."""
+        try:
+            ego = context.get('ego_position') or {}
+            ex = float(ego.get('x', 0.0))
+            ey = float(ego.get('y', 0.0))
+        except Exception:
+            ex = ey = 0.0
+        for v in context.get('conflict_vehicles', []):
+            try:
+                if abs(float(v['x']) - ex) < x_thresh and abs(float(v['y']) - ey) < y_thresh:
+                    return True
+            except Exception:
+                continue
+        return False
+
+    def _eta_to_center(self, x, y, vx, vy, eps=0.5):
+        """Estimate ETA to intersection center using Euclidean distance and speed."""
+        try:
+            spd = (float(vx) ** 2 + float(vy) ** 2) ** 0.5
+            if spd < eps:
+                spd = eps
+            dist = (float(x) ** 2 + float(y) ** 2) ** 0.5
+            return dist / spd
+        except Exception:
+            return 9999.0
+
+    def _tie_break_priority(self, ego_eta, peer_eta, ego_index=0, peer_index=1):
+        """Return 'proceed' or 'yield' based on ETA; tie-break deterministically by index."""
+        try:
+            # If one clearly earlier by 0.5s, give priority
+            if (ego_eta + 0.5) < peer_eta:
+                return "proceed"
+            if (peer_eta + 0.5) < ego_eta:
+                return "yield"
+            # Tie-break deterministically by observation index
+            return "proceed" if int(ego_index) < int(peer_index) else "yield"
+        except Exception:
+            return "proceed"
+
+    def _has_safe_rear_gap(self, obs, ego_x, ego_y, ego_vx, ego_vy) -> bool:
+        """Return True if the nearest follower behind has time headway above a small threshold."""
+        try:
+            along_x = abs(ego_vx) >= abs(ego_vy)
+            # Thresholds
+            min_time_headway = 1.6  # seconds (raised for margin)
+            min_distance = 6.0      # meters fallback
+            ego_speed = max(((ego_vx ** 2 + ego_vy ** 2) ** 0.5), 0.1)
+            # Find follower roughly in same lane corridor behind ego
+            closest_t = None
+            for i in range(1, len(obs)):
+                v = obs[i]
+                if v[0] != 1:
+                    continue
+                x, y = float(v[1]), float(v[2])
+                vx = float(v[3]) if len(v) > 3 else 0.0
+                vy = float(v[4]) if len(v) > 4 else 0.0
+                dx, dy = x - ego_x, y - ego_y
+                # Same-lane corridor
+                if abs(dy) > 3.0:
+                    continue
+                # Behind check
+                if along_x:
+                    if dx > -1.0:
+                        continue
+                    rel_speed = (ego_vx - vx)
+                else:
+                    if dy > -1.0:
+                        continue
+                    rel_speed = (ego_vy - vy)
+                dist = abs(dx) if along_x else abs(dy)
+                # Compute time headway if approaching
+                if rel_speed <= 0.1:
+                    # follower not closing or slower -> safe by speed
+                    continue
+                t = dist / max(rel_speed, 0.1)
+                if closest_t is None or t < closest_t:
+                    closest_t = t
+            if closest_t is None:
+                # no closing follower found -> safe
+                return True
+            # Require both time and distance safety
+            return closest_t >= min_time_headway and (closest_t * ego_speed) >= min_distance
+        except Exception:
+            return True
 
 
 class IntersectionSelfishPolicy:

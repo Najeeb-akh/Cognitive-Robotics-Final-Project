@@ -11,7 +11,7 @@ if SRC_DIR not in sys.path:
 
 from scenarios import create_highway_scenario, create_merge_scenario
 from metrics import MetricsCollector
-from main import run_single_simulation as run_single_base
+from simulation_core import run_single_simulation as run_single_base
 
 
 def short_config():

@@ -1,0 +1,343 @@
+2025-08-25 13:53:47,645 - INFO - Running 10 runs for intersection scenario with selfish composition
+2025-08-25 13:53:47,684 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:47,684 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:47,729 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/6 (composition=selfish)
+2025-08-25 13:53:47,729 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:47,729 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:47,776 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:47,792 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:47,792 - INFO - Step 0/1000 completed
+2025-08-25 13:53:47,851 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:47,851 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:47,851 - INFO - Simulation completed successfully
+2025-08-25 13:53:47,906 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:47,907 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:47,943 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/4 (composition=selfish)
+2025-08-25 13:53:47,943 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:47,943 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:47,978 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:47,997 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:47,997 - INFO - Step 0/1000 completed
+2025-08-25 13:53:48,055 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:48,055 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:48,056 - INFO - Simulation completed successfully
+2025-08-25 13:53:48,093 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:48,093 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:48,137 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/6 (composition=selfish)
+2025-08-25 13:53:48,137 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:48,137 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:48,156 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:48,166 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:48,166 - INFO - Step 0/1000 completed
+2025-08-25 13:53:48,216 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:48,216 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:48,217 - INFO - Simulation completed successfully
+2025-08-25 13:53:48,274 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:48,274 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:48,317 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/7 (composition=selfish)
+2025-08-25 13:53:48,317 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:48,317 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:48,336 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:48,349 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:48,349 - INFO - Step 0/1000 completed
+2025-08-25 13:53:48,399 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:48,399 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:48,399 - INFO - Simulation completed successfully
+2025-08-25 13:53:48,452 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:48,452 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:48,495 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/6 (composition=selfish)
+2025-08-25 13:53:48,496 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:48,496 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:48,530 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:48,548 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:48,549 - INFO - Step 0/1000 completed
+2025-08-25 13:53:48,572 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:48,572 - INFO - Info: {'speed': 19.818837751309246, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.4818837751309246), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.04818837751309246),), 'agents_terminated': (True,)}
+2025-08-25 13:53:48,572 - INFO - Simulation completed successfully
+2025-08-25 13:53:48,586 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:48,586 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:48,606 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/3 (composition=selfish)
+2025-08-25 13:53:48,606 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:48,606 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:48,669 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:48,688 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:48,688 - INFO - Step 0/1000 completed
+2025-08-25 13:53:48,713 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:48,713 - INFO - Info: {'speed': 24.561958168995417, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.9561958168995417), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.09561958168995417),), 'agents_terminated': (True,)}
+2025-08-25 13:53:48,713 - INFO - Simulation completed successfully
+2025-08-25 13:53:48,757 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:48,757 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:48,792 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/5 (composition=selfish)
+2025-08-25 13:53:48,792 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:48,792 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:48,835 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:48,853 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:48,854 - INFO - Step 0/1000 completed
+2025-08-25 13:53:48,874 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:48,874 - INFO - Info: {'speed': 19.818837751309246, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.4818837751309246), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.04818837751309246),), 'agents_terminated': (True,)}
+2025-08-25 13:53:48,875 - INFO - Simulation completed successfully
+2025-08-25 13:53:48,913 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:48,913 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:48,957 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/6 (composition=selfish)
+2025-08-25 13:53:48,957 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:48,957 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:48,983 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:48,996 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:48,996 - INFO - Step 0/1000 completed
+2025-08-25 13:53:49,048 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:49,048 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:49,048 - INFO - Simulation completed successfully
+2025-08-25 13:53:49,069 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:49,069 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:49,121 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/5 (composition=selfish)
+2025-08-25 13:53:49,121 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:49,121 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:49,164 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:49,183 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:49,183 - INFO - Step 0/1000 completed
+2025-08-25 13:53:49,259 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:49,259 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:49,259 - INFO - Simulation completed successfully
+2025-08-25 13:53:49,287 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:49,287 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:49,306 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/3 (composition=selfish)
+2025-08-25 13:53:49,306 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:49,306 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=1.0)
+2025-08-25 13:53:49,358 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:49,380 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:49,381 - INFO - Step 0/1000 completed
+2025-08-25 13:53:49,408 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:49,408 - INFO - Info: {'speed': 15.938712641708477, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.09387126417084772), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.00938712641708476),), 'agents_terminated': (True,)}
+2025-08-25 13:53:49,409 - INFO - Simulation completed successfully
+2025-08-25 13:53:49,409 - INFO - Running 10 runs for intersection scenario with cooperative composition
+2025-08-25 13:53:49,437 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:49,437 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:49,479 - INFO - Population overrides: cooperative_set=0/6, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:49,480 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:49,480 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:49,522 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:49,537 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:49,537 - INFO - Step 0/1000 completed
+2025-08-25 13:53:49,609 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-25 13:53:49,609 - INFO - Info: {'speed': 24.852528716562727, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9852528716562727), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:49,609 - INFO - Simulation completed successfully
+2025-08-25 13:53:49,645 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:49,645 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:49,679 - INFO - Population overrides: cooperative_set=0/4, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:49,679 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:49,679 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:49,714 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:49,733 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:49,733 - INFO - Step 0/1000 completed
+2025-08-25 13:53:49,792 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:49,792 - INFO - Info: {'speed': 24.137030798171082, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9137030798171082), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:49,792 - INFO - Simulation completed successfully
+2025-08-25 13:53:49,819 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:49,819 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:49,862 - INFO - Population overrides: cooperative_set=0/6, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:49,862 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:49,862 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:49,881 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:49,890 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:49,890 - INFO - Step 0/1000 completed
+2025-08-25 13:53:49,938 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:49,938 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:49,939 - INFO - Simulation completed successfully
+2025-08-25 13:53:49,975 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:49,975 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:50,019 - INFO - Population overrides: cooperative_set=0/7, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:50,019 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:50,019 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:50,037 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:50,049 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:50,050 - INFO - Step 0/1000 completed
+2025-08-25 13:53:50,099 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:50,099 - INFO - Info: {'speed': 19.991471971301785, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.49914719713017847), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:50,099 - INFO - Simulation completed successfully
+2025-08-25 13:53:50,135 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:50,136 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:50,178 - INFO - Population overrides: cooperative_set=0/6, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:50,178 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:50,178 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:50,212 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:50,231 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:50,231 - INFO - Step 0/1000 completed
+2025-08-25 13:53:50,281 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-25 13:53:50,281 - INFO - Info: {'speed': 9.278067740220912, 'crashed': True, 'action': 4, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:50,281 - INFO - Simulation completed successfully
+2025-08-25 13:53:50,302 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:50,302 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:50,322 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:50,322 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:50,322 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:50,383 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:50,402 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:50,402 - INFO - Step 0/1000 completed
+2025-08-25 13:53:50,453 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-25 13:53:50,453 - INFO - Info: {'speed': 9.278067740220912, 'crashed': True, 'action': 0, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:50,453 - INFO - Simulation completed successfully
+2025-08-25 13:53:50,474 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:50,475 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:50,509 - INFO - Population overrides: cooperative_set=0/5, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:50,509 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:50,509 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:50,552 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:50,571 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:50,571 - INFO - Step 0/1000 completed
+2025-08-25 13:53:50,616 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-25 13:53:50,616 - INFO - Info: {'speed': 7.725467974079904, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:50,616 - INFO - Simulation completed successfully
+2025-08-25 13:53:50,644 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:50,644 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:50,687 - INFO - Population overrides: cooperative_set=0/6, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:50,688 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:50,688 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:50,714 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:50,727 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:50,727 - INFO - Step 0/1000 completed
+2025-08-25 13:53:50,761 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-25 13:53:50,761 - INFO - Info: {'speed': 14.101220212980753, 'crashed': True, 'action': 0, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:50,761 - INFO - Simulation completed successfully
+2025-08-25 13:53:50,798 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:50,798 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:50,850 - INFO - Population overrides: cooperative_set=0/5, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:50,850 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:50,850 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:50,893 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:50,912 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:50,912 - INFO - Step 0/1000 completed
+2025-08-25 13:53:51,017 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-25 13:53:51,017 - INFO - Info: {'speed': 24.852528716562727, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9852528716562727), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:51,017 - INFO - Simulation completed successfully
+2025-08-25 13:53:51,053 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:51,053 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:51,072 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/0 (composition=cooperative)
+2025-08-25 13:53:51,072 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:51,072 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.0)
+2025-08-25 13:53:51,128 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:51,150 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:51,150 - INFO - Step 0/1000 completed
+2025-08-25 13:53:51,178 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:51,178 - INFO - Info: {'speed': 18.36003738496346, 'crashed': True, 'action': 4, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.33600373849634585), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.03360037384963458),), 'agents_terminated': (True,)}
+2025-08-25 13:53:51,178 - INFO - Simulation completed successfully
+2025-08-25 13:53:51,178 - INFO - Running 10 runs for intersection scenario with mixed composition
+2025-08-25 13:53:51,233 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:51,233 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:51,278 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:51,278 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:51,278 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.5)
+2025-08-25 13:53:51,321 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:51,336 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:51,336 - INFO - Step 0/1000 completed
+2025-08-25 13:53:51,410 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-25 13:53:51,410 - INFO - Info: {'speed': 24.852528716562727, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9852528716562727), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:51,410 - INFO - Simulation completed successfully
+2025-08-25 13:53:51,440 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:51,440 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:51,477 - INFO - Population overrides: cooperative_set=0/2, baseline_set=0/2 (composition=mixed)
+2025-08-25 13:53:51,477 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:51,477 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.5)
+2025-08-25 13:53:51,514 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:51,535 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:51,535 - INFO - Step 0/1000 completed
+2025-08-25 13:53:51,603 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:51,603 - INFO - Info: {'speed': 24.137030798171082, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9137030798171082), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:51,604 - INFO - Simulation completed successfully
+2025-08-25 13:53:51,645 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:51,645 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:51,693 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:51,693 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:51,694 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=0.5)
+2025-08-25 13:53:51,715 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:51,727 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:51,727 - INFO - Step 0/1000 completed
+2025-08-25 13:53:51,782 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:51,782 - INFO - Info: {'speed': 29.841194013284483, 'crashed': False, 'action': 3, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(1.0), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:51,782 - INFO - Simulation completed successfully
+2025-08-25 13:53:51,813 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:51,813 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:51,857 - INFO - Population overrides: cooperative_set=0/4, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:51,857 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:51,857 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.5)
+2025-08-25 13:53:51,875 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:51,887 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:51,887 - INFO - Step 0/1000 completed
+2025-08-25 13:53:51,937 - INFO - Simulation ended early at step 3 - terminated: True, truncated: False
+2025-08-25 13:53:51,937 - INFO - Info: {'speed': 19.991471971301785, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.49914719713017847), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:51,937 - INFO - Simulation completed successfully
+2025-08-25 13:53:51,982 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:51,982 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:52,025 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:52,025 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:52,025 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.5)
+2025-08-25 13:53:52,060 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:52,078 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:52,078 - INFO - Step 0/1000 completed
+2025-08-25 13:53:52,129 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-25 13:53:52,129 - INFO - Info: {'speed': 9.278067740220912, 'crashed': True, 'action': 4, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:52,129 - INFO - Simulation completed successfully
+2025-08-25 13:53:52,158 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:52,158 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:52,177 - INFO - Population overrides: cooperative_set=0/2, baseline_set=0/1 (composition=mixed)
+2025-08-25 13:53:52,178 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:52,178 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=0.5)
+2025-08-25 13:53:52,239 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:52,259 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:52,259 - INFO - Step 0/1000 completed
+2025-08-25 13:53:52,281 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:52,281 - INFO - Info: {'speed': 24.561958168995417, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.9561958168995417), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.09561958168995417),), 'agents_terminated': (True,)}
+2025-08-25 13:53:52,282 - INFO - Simulation completed successfully
+2025-08-25 13:53:52,303 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:52,303 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:52,336 - INFO - Population overrides: cooperative_set=0/2, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:52,337 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:52,337 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=0.5)
+2025-08-25 13:53:52,380 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:52,399 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:52,399 - INFO - Step 0/1000 completed
+2025-08-25 13:53:52,419 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:52,419 - INFO - Info: {'speed': 19.818837751309246, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.4818837751309246), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.04818837751309246),), 'agents_terminated': (True,)}
+2025-08-25 13:53:52,419 - INFO - Simulation completed successfully
+2025-08-25 13:53:52,441 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:52,441 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:52,484 - INFO - Population overrides: cooperative_set=0/3, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:52,485 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:52,485 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.5)
+2025-08-25 13:53:52,511 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:52,523 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:52,523 - INFO - Step 0/1000 completed
+2025-08-25 13:53:52,558 - INFO - Simulation ended early at step 2 - terminated: True, truncated: False
+2025-08-25 13:53:52,559 - INFO - Info: {'speed': 14.101220212980753, 'crashed': True, 'action': 0, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.0), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:52,559 - INFO - Simulation completed successfully
+2025-08-25 13:53:52,614 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:52,615 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:52,666 - INFO - Population overrides: cooperative_set=0/2, baseline_set=0/3 (composition=mixed)
+2025-08-25 13:53:52,666 - INFO - IntersectionCooperativePolicy initialized with intersection-specific social laws
+2025-08-25 13:53:52,666 - INFO - Ego policy: IntersectionCooperativePolicy (selfish_ratio=0.5)
+2025-08-25 13:53:52,710 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:52,728 - INFO - [EGO] step=0 speed=18.2911176537386 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:52,728 - INFO - Step 0/1000 completed
+2025-08-25 13:53:52,834 - INFO - Simulation ended early at step 4 - terminated: True, truncated: False
+2025-08-25 13:53:52,835 - INFO - Info: {'speed': 24.852528716562727, 'crashed': False, 'action': 0, 'rewards': {'collision_reward': 0.0, 'high_speed_reward': np.float64(0.9852528716562727), 'arrived_reward': 1.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(1.0),), 'agents_terminated': (True,)}
+2025-08-25 13:53:52,835 - INFO - Simulation completed successfully
+2025-08-25 13:53:52,880 - INFO - Created intersection-v1 environment
+2025-08-25 13:53:52,880 - WARNING - Observation features not specified; proceeding with default assumptions (got: None)
+2025-08-25 13:53:52,899 - INFO - Population overrides: cooperative_set=0/2, baseline_set=0/1 (composition=mixed)
+2025-08-25 13:53:52,899 - INFO - IntersectionSelfishPolicy initialized with intersection-specific parameters
+2025-08-25 13:53:52,899 - INFO - Ego policy: IntersectionSelfishPolicy (selfish_ratio=0.5)
+2025-08-25 13:53:52,953 - INFO - Starting simulation with DiscreteActionAdapter for 1000 steps
+2025-08-25 13:53:52,976 - INFO - [EGO] step=0 speed=22.436676480607897 lane_index=('o0', 'ir0', 0) crashed=False
+2025-08-25 13:53:52,976 - INFO - Step 0/1000 completed
+2025-08-25 13:53:53,005 - INFO - Simulation ended early at step 1 - terminated: True, truncated: False
+2025-08-25 13:53:53,005 - INFO - Info: {'speed': 15.938712641708477, 'crashed': True, 'action': 3, 'rewards': {'collision_reward': 1.0, 'high_speed_reward': np.float64(0.09387126417084772), 'arrived_reward': 0.0, 'on_road_reward': np.float64(1.0)}, 'agents_rewards': (np.float64(0.00938712641708476),), 'agents_terminated': (True,)}
+2025-08-25 13:53:53,005 - INFO - Simulation completed successfully
+2025-08-25 13:53:53,005 - INFO - Saving aggregated results...
+2025-08-25 13:53:53,011 - INFO - Aggregated results saved to results/highway_stats.csv
+2025-08-25 13:53:53,011 - INFO - Generating comparison plots...
+2025-08-25 13:53:54,964 - INFO - Generated 6 plots in /Users/shayvasilisky/Documents/Personal/TASP/Second Year/Semester B/רובוטים קוגניטיביים/Project CC_V2/social_law_simulation/plots
+2025-08-25 13:53:54,964 - INFO -   - intersection_average_speed.png
+2025-08-25 13:53:54,964 - INFO -   - intersection_collisions.png
+2025-08-25 13:53:54,964 - INFO -   - intersection_acceleration_stability.png
+2025-08-25 13:53:54,964 - INFO -   - combined_efficiency_comparison.png
+2025-08-25 13:53:54,964 - INFO -   - combined_safety_comparison.png
+2025-08-25 13:53:54,964 - INFO -   - summary_dashboard.png

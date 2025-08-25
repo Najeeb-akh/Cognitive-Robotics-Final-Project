@@ -42,6 +42,18 @@ class MetricsCollector:
         # Scenario/runtime context (may be injected by runner)
         runtime = config.get('runtime', {}) if isinstance(config, dict) else {}
         self.scenario_type = (runtime.get('scenario_type') or '').strip().lower()
+        # Time step estimation (seconds per decision step)
+        self._dt = None
+        try:
+            if isinstance(config, dict):
+                sim_cfg = config.get('simulation', {}) or {}
+                pf = sim_cfg.get('policy_frequency', None)
+                if pf is not None:
+                    pf = float(pf)
+                    if pf > 0:
+                        self._dt = 1.0 / pf
+        except Exception:
+            self._dt = None
     
     def reset_metrics(self):
         """Reset all metrics for a new simulation run."""
@@ -55,12 +67,22 @@ class MetricsCollector:
         # Safety metrics
         self.collisions = 0
         self.ttc_events = []
+        self.min_ttc_per_step = []
+        self.thw_values = []
+        self.drac_values = []
+        self.thw_violations = 0
+        self.thw_violation_threshold = 1.0
+        # Collision severity events (relative-speed squared proxy)
+        self.collision_events = []
         # Ego-specific safety
         self.ego_collisions = 0
         self._ego_collision_counted = False
         
         # Stability metrics
         self.acceleration_history = defaultdict(list)
+        self._last_speed_by_vid = {}
+        self._last_accel_by_vid = {}
+        self.jerk_values = []
         
         # Cooperation metrics (for merge scenarios)
         self.merge_attempts = 0
@@ -68,6 +90,16 @@ class MetricsCollector:
         
         # Per-step data for detailed analysis
         self.step_data = []
+        # Lane-change quality
+        self._prev_lane_index = {}
+        self.lane_change_attempts = 0
+        self.unsafe_lane_changes = 0
+        # Right-lane compliance (ego-focused to start)
+        self.right_lane_eligible_ticks = 0
+        self.right_lane_compliant_ticks = 0
+        # Throughput tracking (crossing lane ends)
+        self._last_s_by_vid = {}
+        self._lane_end_threshold = 5.0
     
     def collect_step_metrics(self, env, step_num, info=None):
         """
@@ -110,46 +142,46 @@ class MetricsCollector:
         except Exception:
             pass
         
-        # Collect accelerations for stability metrics
+        # Estimate acceleration and jerk using finite differences of speed per vehicle
+        # Estimate dt if unknown from env config
+        if self._dt is None:
+            try:
+                cfg = getattr(env, 'config', {})
+                if not isinstance(cfg, dict):
+                    cfg = getattr(getattr(env, 'unwrapped', env), 'config', {}) or {}
+                # Prefer env policy_frequency; if missing, default to 1 Hz (Gymnasium policy default)
+                pf = cfg.get('policy_frequency', None)
+                if pf is None:
+                    pf = 1.0
+                pf = float(pf)
+                if pf > 0:
+                    self._dt = 1.0 / pf
+            except Exception:
+                self._dt = None
         for vehicle in vehicles:
-            accel = None
-            
-            # Try different ways to access acceleration
-            if hasattr(vehicle, 'acceleration'):
-                accel = vehicle.acceleration
-                # Check if it's a method and call it if needed
-                if callable(accel):
-                    try:
-                        accel = accel()
-                    except:
-                        accel = None
-            elif hasattr(vehicle, 'action') and hasattr(vehicle.action, 'acceleration'):
-                accel = vehicle.action.acceleration
-                if callable(accel):
-                    try:
-                        accel = accel()
-                    except:
-                        accel = None
-            elif hasattr(vehicle, 'last_action') and hasattr(vehicle.last_action, 'acceleration'):
-                accel = vehicle.last_action.acceleration
-                if callable(accel):
-                    try:
-                        accel = accel()
-                    except:
-                        accel = None
-            
-            # Only append if we have a valid numeric value
-            if accel is not None and not getattr(vehicle, 'crashed', False):
-                try:
-                    # Ensure it's a number
-                    accel_val = float(accel)
-                    self.acceleration_history[id(vehicle)].append(accel_val)
-                except (TypeError, ValueError):
-                    # Skip if we can't convert to float
-                    pass
+            if getattr(vehicle, 'crashed', False):
+                continue
+            try:
+                vid = getattr(vehicle, 'id', None) or id(vehicle)
+                speed_now = float(getattr(vehicle, 'speed', 0.0))
+                prev_speed = self._last_speed_by_vid.get(vid, None)
+                accel_now = None
+                if prev_speed is not None and self._dt:
+                    accel_now = (speed_now - prev_speed) / self._dt
+                    self.acceleration_history[vid].append(accel_now)
+                    prev_accel = self._last_accel_by_vid.get(vid, None)
+                    if prev_accel is not None:
+                        jerk = (accel_now - prev_accel) / self._dt
+                        # Clip extreme outliers to guard against dt mis-estimation
+                        if np.isfinite(jerk):
+                            self.jerk_values.append(float(jerk))
+                    self._last_accel_by_vid[vid] = accel_now
+                self._last_speed_by_vid[vid] = speed_now
+            except Exception:
+                continue
         
-        # Check for collisions (transition-based)
-        self._check_collisions(vehicles)
+        # Check for collisions (transition-based) and compute severity
+        self._check_collisions(vehicles, road, step_num)
         # Ego collision tracking
         if ego_vehicle is not None and getattr(ego_vehicle, 'crashed', False) and not self._ego_collision_counted:
             self.ego_collisions = 1
@@ -166,8 +198,16 @@ class MetricsCollector:
                     lane_index = None
                 print(f"[EGO-DBG] step={step_num} speed={getattr(ego_vehicle, 'speed', None)} lane_index={lane_index} crashed={getattr(ego_vehicle, 'crashed', False)}")
         
-        # Calculate Time-to-Collision events (guarded)
-        self._calculate_ttc_events(vehicles)
+        # Calculate lane-aware Time-to-Collision and headway/DRAC using nearest neighbors
+        self._calculate_neighbor_safety_events(road, vehicles)
+
+        # Throughput: count vehicles crossing lane end zones (only for highway-like scenarios)
+        if (self.scenario_type in (None, '', 'highway', 'merge')):
+            self._update_throughput(road, vehicles)
+
+        # Lane change quality and right-lane compliance (ego-focused)
+        self._update_lane_change_quality(road, vehicles)
+        self._update_right_lane_compliance(road, ego_vehicle)
         
         # Check merge events (for merge scenarios)
         self._check_merge_events(env, vehicles)
@@ -180,7 +220,7 @@ class MetricsCollector:
         step_data = {
             'step': step_num,
             'num_vehicles': len(vehicles),
-            'avg_speed': ego_speed,  # Now tracks only ego vehicle speed
+            'ego_speed': ego_speed,
             'collisions_this_step': 0  # Will be updated by collision detection
         }
         # Add selected info-derived fields when available
@@ -215,17 +255,21 @@ class MetricsCollector:
         except (TypeError, ValueError):
             pass
     
-    def _check_collisions(self, vehicles):
+    def _check_collisions(self, vehicles, road, step_num):
         """
         Check for collisions using highway-env's built-in crash detection.
         
         Args:
             vehicles (list): List of vehicles in simulation
+            road: Road object for neighbor queries
+            step_num (int): Current step number
         """
         collisions_this_step = 0
         # Maintain per-vehicle crash state to detect transitions
         if not hasattr(self, '_vehicle_crash_state'):
             self._vehicle_crash_state = {}
+        if not hasattr(self, '_collision_pairs_logged'):
+            self._collision_pairs_logged = set()
 
         for vehicle in vehicles:
             vid = getattr(vehicle, 'id', None)
@@ -237,84 +281,279 @@ class MetricsCollector:
             if crashed and not prev:
                 self.collisions += 1
                 collisions_this_step += 1
+                # Estimate collision severity via relative speed squared with nearest neighbor
+                try:
+                    pos = np.array(getattr(vehicle, 'position', (0.0, 0.0)), dtype=float)
+                    v_speed = float(getattr(vehicle, 'speed', 0.0))
+                    v_heading = float(getattr(vehicle, 'heading', 0.0)) if hasattr(vehicle, 'heading') else 0.0
+                    v_vel = np.array([v_speed * np.cos(v_heading), v_speed * np.sin(v_heading)])
+                    # Find nearest other vehicle within small radius
+                    nearest = None
+                    nearest_vid = None
+                    nearest_dist = float('inf')
+                    for other in vehicles:
+                        if other is vehicle:
+                            continue
+                        o_vid = getattr(other, 'id', None) or id(other)
+                        o_pos = np.array(getattr(other, 'position', (np.inf, np.inf)), dtype=float)
+                        d = float(np.linalg.norm(o_pos - pos))
+                        if d < nearest_dist:
+                            nearest = other
+                            nearest_vid = o_vid
+                            nearest_dist = d
+                    if nearest is not None and np.isfinite(nearest_dist) and nearest_dist < 5.0:
+                        o_speed = float(getattr(nearest, 'speed', 0.0))
+                        o_heading = float(getattr(nearest, 'heading', 0.0)) if hasattr(nearest, 'heading') else 0.0
+                        o_vel = np.array([o_speed * np.cos(o_heading), o_speed * np.sin(o_heading)])
+                        rel_v = o_vel - v_vel
+                        css = float(np.dot(rel_v, rel_v))  # v_rel^2
+                        pair = tuple(sorted([vid, nearest_vid]))
+                        if pair not in getattr(self, '_collision_pairs_logged', set()):
+                            self.collision_events.append({
+                                'step': int(step_num),
+                                'vid_a': vid,
+                                'vid_b': nearest_vid,
+                                'relative_speed_sq': css,
+                                'distance': float(nearest_dist)
+                            })
+                            self._collision_pairs_logged.add(pair)
+                except Exception:
+                    pass
             self._vehicle_crash_state[vid] = crashed
 
         if self.step_data:
             self.step_data[-1]['collisions_this_step'] = collisions_this_step
-    
-    def _calculate_ttc_events(self, vehicles):
-        """
-        Calculate Time-to-Collision for vehicle pairs.
-        
-        Args:
-            vehicles (list): List of vehicles in simulation
-        """
-        valid_pairs = 0
-        for i, vehicle1 in enumerate(vehicles):
-            for vehicle2 in vehicles[i+1:]:
-                ttc = self._calculate_ttc_pair(vehicle1, vehicle2)
-                if ttc is None:
-                    continue
-                valid_pairs += 1
-                if ttc < self.TTC_THRESHOLD:
-                    self.ttc_events.append(ttc)
-    
-    def _calculate_ttc_pair(self, vehicle1, vehicle2):
-        """
-        Calculate TTC between two vehicles.
-        
-        Args:
-            vehicle1, vehicle2: Vehicle objects
-            
-        Returns:
-            float or None: TTC in seconds, None if no collision course
-        """
-        # Guard required attributes
-        if not (hasattr(vehicle1, 'position') and hasattr(vehicle2, 'position')):
-            return None
-        if not (hasattr(vehicle1, 'speed') and hasattr(vehicle2, 'speed')):
-            return None
-        # Some envs may not expose heading; skip pair if missing
-        if not (hasattr(vehicle1, 'heading') and hasattr(vehicle2, 'heading')):
-            return None
 
+    def _lane_and_s(self, road, vehicle):
+        lane = None
+        s = None
         try:
-            pos1 = np.array(vehicle1.position, dtype=float)
-            pos2 = np.array(vehicle2.position, dtype=float)
-            v1 = float(getattr(vehicle1, 'speed', 0.0))
-            v2 = float(getattr(vehicle2, 'speed', 0.0))
-            h1 = float(getattr(vehicle1, 'heading', 0.0))
-            h2 = float(getattr(vehicle2, 'heading', 0.0))
+            net = getattr(road, 'network', None)
+            lane_index = getattr(vehicle, 'lane_index', None)
+            if net is not None and lane_index is not None:
+                lane = net.get_lane(lane_index)
+                if lane is not None and hasattr(lane, 'local_coordinates') and hasattr(vehicle, 'position'):
+                    s, _ = lane.local_coordinates(vehicle.position)
         except Exception:
-            return None
+            lane = None
+            s = None
+        return lane, s
 
-        vel1 = np.array([v1 * np.cos(h1), v1 * np.sin(h1)])
-        vel2 = np.array([v2 * np.cos(h2), v2 * np.sin(h2)])
-        
-        # Relative position and velocity
-        rel_pos = pos2 - pos1
-        rel_vel = vel2 - vel1
-        
-        # If relative velocity is zero or vehicles are moving apart, no collision
-        if np.dot(rel_pos, rel_vel) >= 0:
-            return None
-        
-        # Calculate TTC
-        rel_speed = np.linalg.norm(rel_vel)
-        if rel_speed == 0:
-            return None
-        
-        # Time to closest approach
-        t_closest = -np.dot(rel_pos, rel_vel) / (rel_speed ** 2)
-        
-        # Distance at closest approach
-        closest_distance = np.linalg.norm(rel_pos + rel_vel * t_closest)
-        
-        # If closest distance is greater than collision threshold, no collision
-        if closest_distance > self.COLLISION_DISTANCE:
-            return None
-        
-        return t_closest
+    def _front_rear_in_lane(self, road, self_vehicle, lane_index, s_self, self_vid):
+        front = None
+        rear = None
+        front_s = float('inf')
+        rear_s = -float('inf')
+        try:
+            # Prefer highway-env helper if available
+            get_nb = getattr(road, 'neighbouring_vehicles', None)
+            net = getattr(road, 'network', None)
+            lane = net.get_lane(lane_index) if (net is not None and lane_index is not None) else None
+            if callable(get_nb):
+                try:
+                    nb_front, nb_rear = get_nb(self_vehicle)
+                    if nb_front is not None and lane is not None and hasattr(lane, 'local_coordinates'):
+                        s_f, _ = lane.local_coordinates(nb_front.position)
+                        if s_f > s_self:
+                            front = (nb_front, s_f)
+                    if nb_rear is not None and lane is not None and hasattr(lane, 'local_coordinates'):
+                        s_r, _ = lane.local_coordinates(nb_rear.position)
+                        if s_r < s_self:
+                            rear = (nb_rear, s_r)
+                    return front, rear
+                except Exception:
+                    # Fallback to manual scan
+                    pass
+            vehicles = getattr(road, 'vehicles', [])
+            for v in vehicles:
+                vid = getattr(v, 'id', None) or id(v)
+                if vid == self_vid:
+                    continue
+                if getattr(v, 'lane_index', None) != lane_index:
+                    continue
+                if lane is not None and hasattr(lane, 'local_coordinates') and hasattr(v, 'position'):
+                    try:
+                        s_v, _ = lane.local_coordinates(v.position)
+                    except Exception:
+                        continue
+                    if s_v > s_self and s_v < front_s:
+                        front_s = s_v
+                        front = (v, s_v)
+                    if s_v < s_self and s_v > rear_s:
+                        rear_s = s_v
+                        rear = (v, s_v)
+        except Exception:
+            return None, None
+        return front, rear
+
+    def _calculate_neighbor_safety_events(self, road, vehicles):
+        ttc_list = []
+        try:
+            for v in vehicles:
+                if getattr(v, 'crashed', False):
+                    continue
+                vid = getattr(v, 'id', None) or id(v)
+                lane, s = self._lane_and_s(road, v)
+                if lane is None or s is None:
+                    continue
+                front, rear = self._front_rear_in_lane(road, v, getattr(v, 'lane_index', None), s, vid)
+                # Headway / DRAC / TTC with front vehicle
+                if front is not None:
+                    front_v, s_front = front
+                    gap = float(s_front - s)
+                    v_f = float(getattr(v, 'speed', 0.0))
+                    v_l = float(getattr(front_v, 'speed', 0.0))
+                    # THW
+                    if v_f > 1e-3 and gap > 0:
+                        thw = gap / v_f
+                        self.thw_values.append(thw)
+                        if thw < self.thw_violation_threshold:
+                            self.thw_violations += 1
+                    # DRAC and TTC (longitudinal)
+                    dv = v_f - v_l
+                    if dv > 0 and gap > 0:
+                        ttc = gap / dv
+                        if np.isfinite(ttc):
+                            ttc_list.append(ttc)
+                            if ttc < self.TTC_THRESHOLD:
+                                self.ttc_events.append(ttc)
+                        drac = (dv * dv) / (2.0 * gap)
+                        if np.isfinite(drac):
+                            self.drac_values.append(drac)
+            if ttc_list:
+                self.min_ttc_per_step.append(float(np.min(ttc_list)))
+            else:
+                self.min_ttc_per_step.append(float('inf'))
+        except Exception:
+            # Robust to API variations; in worst case, keep prior behavior (no events)
+            pass
+
+    def _update_throughput(self, road, vehicles):
+        try:
+            net = getattr(road, 'network', None)
+            for v in vehicles:
+                if getattr(v, 'crashed', False):
+                    continue
+                vid = getattr(v, 'id', None) or id(v)
+                lane_index = getattr(v, 'lane_index', None)
+                if net is None or lane_index is None:
+                    continue
+                lane = None
+                try:
+                    lane = net.get_lane(lane_index)
+                except Exception:
+                    lane = None
+                if lane is None or not hasattr(lane, 'local_coordinates'):
+                    continue
+                try:
+                    s, _ = lane.local_coordinates(v.position)
+                except Exception:
+                    continue
+                last_s = self._last_s_by_vid.get(vid, None)
+                lane_length = getattr(lane, 'length', None)
+                # If lane length is not available, skip counting for this vehicle to avoid bias
+                if lane_length is None:
+                    self._last_s_by_vid[vid] = s
+                    continue
+                threshold = float(lane_length) - float(self._lane_end_threshold)
+                if last_s is not None:
+                    # Crossing near the end of lane from below to above threshold
+                    if last_s < threshold <= s:
+                        self.completed_routes += 1
+                    # Reset if respawn (s jumps backward a lot)
+                    if s + 20.0 < last_s:
+                        self._last_s_by_vid[vid] = s
+                    else:
+                        self._last_s_by_vid[vid] = s
+                else:
+                    self._last_s_by_vid[vid] = s
+        except Exception:
+            pass
+
+    def _update_lane_change_quality(self, road, vehicles):
+        try:
+            net = getattr(road, 'network', None)
+            for v in vehicles:
+                if getattr(v, 'crashed', False):
+                    continue
+                vid = getattr(v, 'id', None) or id(v)
+                lane_index = getattr(v, 'lane_index', None)
+                prev_lane_index = self._prev_lane_index.get(vid, lane_index)
+                self._prev_lane_index[vid] = lane_index
+                if lane_index is None or prev_lane_index is None:
+                    continue
+                if lane_index == prev_lane_index:
+                    continue
+                # Lane change detected
+                self.lane_change_attempts += 1
+                lane_now, s_now = self._lane_and_s(road, v)
+                if lane_now is None or s_now is None:
+                    continue
+                rear = self._front_rear_in_lane(road, v, lane_index, s_now, vid)[1]
+                unsafe = False
+                safe_gap = max(5.0, float(getattr(v, 'speed', 0.0)) * 1.0)
+                if rear is not None:
+                    rear_v, s_rear = rear
+                    gap_rear = float(s_now - s_rear)
+                    if gap_rear < safe_gap:
+                        unsafe = True
+                    else:
+                        dv = abs(float(getattr(v, 'speed', 0.0)) - float(getattr(rear_v, 'speed', 0.0)))
+                        if dv > 5.0:
+                            unsafe = True
+                else:
+                    # No rear car: likely safe
+                    unsafe = False
+                if unsafe:
+                    self.unsafe_lane_changes += 1
+        except Exception:
+            pass
+
+    def _update_right_lane_compliance(self, road, ego_vehicle):
+        try:
+            if ego_vehicle is None:
+                return
+            lane_index = getattr(ego_vehicle, 'lane_index', None)
+            net = getattr(road, 'network', None)
+            if lane_index is None or net is None:
+                return
+            # Rightmost is typically lane_id == 0
+            lane_id = lane_index[2] if isinstance(lane_index, (list, tuple)) and len(lane_index) > 2 else None
+            if lane_id is None:
+                return
+            # Determine eligibility to keep right: if there exists a right lane and it is sufficiently free
+            eligible = False
+            compliant = lane_id == 0
+            if lane_id > 0:
+                right_index = (lane_index[0], lane_index[1], lane_id - 1)
+                try:
+                    right_lane = net.get_lane(right_index)
+                except Exception:
+                    right_lane = None
+                if right_lane is not None:
+                    # Compute front neighbor gap in the right lane
+                    lane_now, s_now = self._lane_and_s(road, ego_vehicle)
+                    if lane_now is None or s_now is None:
+                        return
+                    # We need s in right lane coordinates too
+                    try:
+                        s_right, _ = right_lane.local_coordinates(ego_vehicle.position)
+                    except Exception:
+                        s_right = s_now
+                    front_right, rear_right = self._front_rear_in_lane(road, ego_vehicle, right_index, s_right, getattr(ego_vehicle, 'id', None) or id(ego_vehicle))
+                    safe_gap = max(10.0, float(getattr(ego_vehicle, 'speed', 0.0)) * 2.0)
+                    gap_ok = True
+                    if front_right is not None:
+                        gap = float(front_right[1] - s_right)
+                        gap_ok = gap > safe_gap
+                    # Eligible to be on right if right lane exists and has enough front gap
+                    eligible = gap_ok
+            if eligible:
+                self.right_lane_eligible_ticks += 1
+                if compliant:
+                    self.right_lane_compliant_ticks += 1
+        except Exception:
+            pass
     
     def _check_merge_events(self, env, vehicles):
         """
@@ -385,18 +624,71 @@ class MetricsCollector:
             metrics['speed_std'] = 0
         
         metrics['throughput'] = self.completed_routes
+        # Time-normalized throughput (vehicles per minute)
+        try:
+            steps = int(len(self.step_data))
+            dt = float(self._dt) if self._dt else None
+            if not dt:
+                # Fallback: attempt to get policy_frequency again from first step env if available
+                dt = None
+            if dt and steps > 0:
+                elapsed_sec = steps * dt
+                metrics['throughput_per_min'] = (self.completed_routes / elapsed_sec) * 60.0 if elapsed_sec > 0 else 0.0
+            else:
+                metrics['throughput_per_min'] = 0.0
+        except Exception:
+            metrics['throughput_per_min'] = 0.0
         
         # Safety Metrics
         metrics['total_collisions'] = self.collisions
         metrics['ego_collisions'] = int(self.ego_collisions)
+        # Event-level TTC (near-miss list)
         if self.ttc_events:
-            metrics['avg_ttc'] = np.mean(self.ttc_events)
-            metrics['min_ttc'] = np.min(self.ttc_events)
-            metrics['ttc_events_count'] = len(self.ttc_events)
+            metrics['avg_ttc'] = float(np.mean(self.ttc_events))
+            metrics['min_ttc'] = float(np.min(self.ttc_events))
+            metrics['ttc_events_count'] = int(len(self.ttc_events))
         else:
             metrics['avg_ttc'] = float('inf')
-            metrics['min_ttc'] = float('inf')  
+            metrics['min_ttc'] = float('inf')
             metrics['ttc_events_count'] = 0
+        # Step-level minimum TTC
+        if self.min_ttc_per_step:
+            finite_step_ttc = [t for t in self.min_ttc_per_step if np.isfinite(t)]
+            metrics['min_step_ttc'] = float(np.min(finite_step_ttc)) if finite_step_ttc else float('inf')
+            under_1 = sum(1 for t in self.min_ttc_per_step if np.isfinite(t) and t < 1.0)
+            under_2 = sum(1 for t in self.min_ttc_per_step if np.isfinite(t) and t < 2.0)
+            total_steps = max(1, len(self.min_ttc_per_step))
+            metrics['frac_steps_ttc_lt_1'] = under_1 / total_steps
+            metrics['frac_steps_ttc_lt_2'] = under_2 / total_steps
+        else:
+            metrics['min_step_ttc'] = float('inf')
+            metrics['frac_steps_ttc_lt_1'] = 0.0
+            metrics['frac_steps_ttc_lt_2'] = 0.0
+        # THW and DRAC
+        if self.thw_values:
+            thw_arr = np.asarray(self.thw_values, dtype=float)
+            metrics['thw_median'] = float(np.median(thw_arr))
+            metrics['thw_p05'] = float(np.percentile(thw_arr, 5))
+            metrics['thw_violation_rate'] = float(self.thw_violations) / float(max(1, len(self.thw_values)))
+        else:
+            metrics['thw_median'] = float('inf')
+            metrics['thw_p05'] = float('inf')
+            metrics['thw_violation_rate'] = 0.0
+        if self.drac_values:
+            drac_arr = np.asarray(self.drac_values, dtype=float)
+            metrics['drac_mean'] = float(np.mean(drac_arr))
+            metrics['drac_p95'] = float(np.percentile(drac_arr, 95))
+        else:
+            metrics['drac_mean'] = 0.0
+            metrics['drac_p95'] = 0.0
+        # Collision severity
+        if self.collision_events:
+            css_arr = np.asarray([e.get('relative_speed_sq', 0.0) for e in self.collision_events], dtype=float)
+            metrics['collision_severity_mean'] = float(np.mean(css_arr))
+            metrics['collision_severity_p95'] = float(np.percentile(css_arr, 95))
+        else:
+            metrics['collision_severity_mean'] = 0.0
+            metrics['collision_severity_p95'] = 0.0
         
         # Stability Metrics
         all_accelerations = []
@@ -409,6 +701,31 @@ class MetricsCollector:
         else:
             metrics['acceleration_std'] = 0
             metrics['acceleration_mean'] = 0
+        # Jerk
+        if self.jerk_values:
+            j = np.asarray(self.jerk_values, dtype=float)
+            metrics['jerk_mean'] = float(np.mean(j))
+            metrics['jerk_p95'] = float(np.percentile(j, 95))
+            metrics['jerk_max'] = float(np.max(j))
+            exceed = np.sum(np.abs(j) > 2.0)
+            metrics['jerk_exceedance_pct_2'] = float(exceed) / float(len(j))
+        else:
+            metrics['jerk_mean'] = 0.0
+            metrics['jerk_p95'] = 0.0
+            metrics['jerk_max'] = 0.0
+            metrics['jerk_exceedance_pct_2'] = 0.0
+
+        # Lane change quality
+        metrics['lane_change_attempts'] = int(self.lane_change_attempts)
+        metrics['unsafe_lane_change_rate'] = (
+            float(self.unsafe_lane_changes) / float(self.lane_change_attempts)
+            if self.lane_change_attempts > 0 else 0.0
+        )
+
+        # Right-lane compliance
+        metrics['right_lane_compliance_ratio'] = (
+            float(self.right_lane_compliant_ticks) / float(max(1, self.right_lane_eligible_ticks))
+        )
         
         # Cooperation Metrics (for merge scenarios)
         if self.merge_attempts > 0:

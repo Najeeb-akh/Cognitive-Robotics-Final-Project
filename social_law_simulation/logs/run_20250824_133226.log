@@ -1,7 +1,0 @@
-2025-08-24 13:32:26,217 - INFO - Running 5 runs for highway scenario with selfish composition
-2025-08-24 13:32:26,885 - INFO - Population overrides: cooperative_set=0/0, baseline_set=0/50 (composition=selfish)
-2025-08-24 13:32:26,903 - INFO - Created SelfishPolicy for ego vehicle
-2025-08-24 13:32:26,913 - INFO - Starting simulation with SelfishPolicy for 1000 steps
-2025-08-24 13:32:27,187 - INFO - [EGO] step=0 speed=29.1455588268693 lane_index=('0', '1', 0) crashed=False
-2025-08-24 13:32:27,187 - INFO - Step 0/1000 completed
-2025-08-24 13:32:40,023 - INFO - [EGO] step=50 speed=20.000000000000078 lane_index=('0', '1', 0) crashed=False
