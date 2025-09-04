@@ -6,7 +6,8 @@
       "Bash(pip install:*)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:farama-foundation.github.io)",
-      "WebFetch(domain:highway-env.farama.org)"
+      "WebFetch(domain:highway-env.farama.org)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

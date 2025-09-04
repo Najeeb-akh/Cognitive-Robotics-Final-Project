@@ -17,7 +17,7 @@ if SRC_DIR not in sys.path:
 
 from metrics import MetricsCollector, MetricsAggregator
 from simulation_core import run_single_simulation as run_single_simulation_base, DiscreteActionAdapter, ContinuousActionAdapter
-from policy_factory import create_agent_policy, detect_scenario_type
+from policy_factory import create_agent_policy, detect_scenario_type, create_single_social_law_policy, get_available_social_laws
 from scenarios import (
     create_highway_scenario,
     create_merge_scenario,
@@ -95,6 +95,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--config', default=os.path.join(CURRENT_DIR, 'config.yaml'), help='Path to unified config file')
     parser.add_argument('--scenario', help='Scenario to run (e.g., highway, merge, intersection, roundabout, racetrack). If omitted, uses enabled scenarios from config.scenarios')
     parser.add_argument('--composition', help='Agent composition: selfish | cooperative | mixed | all. If omitted, uses scenario-defined compositions from config.scenarios')
+    parser.add_argument('--social-law', help='Run with specific social law (e.g., cooperative_merging, polite_yielding). Overrides composition selection and enables only the specified social law.')
     parser.add_argument('--runs', type=int, help='Number of runs per scenario-composition combination (overrides config)')
     parser.add_argument('--seed', type=int, default=0, help='Base random seed (default: 0)')
     parser.add_argument('--render', action='store_true', help='Enable visualization (render_mode=human)')
@@ -437,6 +438,15 @@ def main() -> None:
     # Prepare aggregator
     aggregator = MetricsAggregator()
 
+    # Handle social law parameter - validate if specified
+    if args.social_law:
+        available_laws = get_available_social_laws(config)
+        if not available_laws:
+            raise ValueError("No social laws configured. Cannot use --social-law parameter.")
+        if args.social_law not in available_laws:
+            raise ValueError(f"Unknown social law '{args.social_law}'. Available: {available_laws}")
+        logging.info(f"Using single social law: {args.social_law}")
+    
     # Resolve scenarios and compositions
     selections = resolve_from_config(args, config)
     if not selections:
@@ -455,8 +465,14 @@ def main() -> None:
         
         # Policy selection based on scenario type (create once for reuse)
         scenario_type = detect_scenario_type(scenario_key)
-        composition = comp_name_to_ratio(composition_name)
-        comp_desc = f"{int(composition['selfish_ratio']*100)}% Selfish, {int(composition['cooperative_ratio']*100)}% Cooperative"
+        
+        # Handle social law override or use regular composition
+        if args.social_law:
+            comp_desc = f"Single Social Law: {args.social_law}"
+            composition = None  # Not used when social law is specified
+        else:
+            composition = comp_name_to_ratio(composition_name)
+            comp_desc = f"{int(composition['selfish_ratio']*100)}% Selfish, {int(composition['cooperative_ratio']*100)}% Cooperative"
         
         # Run multiple instances
         for run_idx in range(runs):
@@ -575,11 +591,20 @@ def main() -> None:
             metrics_collector = MetricsCollector(config)
 
             # Create policy for this run
-            agent_policy = create_agent_policy(composition, config, scenario_type)
-            try:
-                logging.info(f"Ego policy: {agent_policy.__class__.__name__} (selfish_ratio={composition.get('selfish_ratio')})")
-            except Exception:
-                pass
+            if args.social_law:
+                # Use single social law policy
+                agent_policy = create_single_social_law_policy(args.social_law, config, scenario_type)
+                try:
+                    logging.info(f"Ego policy: {agent_policy.__class__.__name__} (social_law={args.social_law})")
+                except Exception:
+                    pass
+            else:
+                # Use regular composition-based policy
+                agent_policy = create_agent_policy(composition, config, scenario_type)
+                try:
+                    logging.info(f"Ego policy: {agent_policy.__class__.__name__} (selfish_ratio={composition.get('selfish_ratio')})")
+                except Exception:
+                    pass
 
 
             # Always use base runner (supports stop/pause/progress)
