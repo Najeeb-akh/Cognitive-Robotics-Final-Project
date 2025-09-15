@@ -10,23 +10,27 @@ scenarios:
   highway:
     builder: highway
     enable: true
-    compositions: [selfish, cooperative, mixed]
+    compositions: [selfish, cooperative, defensive, mixed]
   merge:
     builder: merge
     enable: true
-    compositions: [selfish, cooperative, mixed]
+    compositions: [selfish, cooperative, defensive, mixed]
   intersection:
     builder: intersection
     enable: true
-    compositions: [selfish, cooperative, mixed]
+    compositions: [selfish, cooperative, defensive, mixed]
   roundabout:
     builder: roundabout
     enable: true
-    compositions: [selfish, cooperative, mixed]
+    compositions: [selfish, cooperative, defensive, mixed]
   racetrack:
     builder: racetrack
     enable: true
-    compositions: [selfish, cooperative, mixed]
+    compositions: [selfish, cooperative, defensive, mixed]
+  parking_lot:
+    builder: parking_lot
+    enable: true
+    compositions: [selfish, cooperative, defensive, mixed]
   
 # Environment parameters
 environment:
@@ -70,19 +74,45 @@ environment:
     straight_length: 400        # Length of straight sections
     slipstream_effect: true     # Enable drafting/slipstream effects
     
+  parking_lot:
+    lanes_count: 6              # Number of lanes for parking lot
+    vehicles_count: 30          # Moderate density for parking lot
+    duration: 120               # Longer episodes for parking maneuvers
+    parking_spaces: 20          # Number of available parking spaces
+    maneuvering_zone_size: 50   # Size of maneuvering zones
+    aggressiveness: 0.8         # Selfish behavior aggressiveness
+    space_claiming_distance: 15.0  # Distance to claim parking spaces
+    
+  # Defensive behavior parameters
+  defensive:
+    time_headway: 4.0           # 4x normal headway for extreme safety
+    max_speed_factor: 0.6       # 60% of normal speed
+    following_distance: 5.0     # 5x minimum spacing
+    caution_distance: 50.0      # Start slowing 50m before obstacles
+    lane_change_threshold: 0.8  # Very high threshold for lane changes
+    speed_reduction_factor: 0.7 # 30% speed reduction in complex situations
+    
 # Agent composition configurations
 compositions:
   - name: "100% Selfish"
     selfish_ratio: 1.0
     cooperative_ratio: 0.0
+    defensive_ratio: 0.0
     
   - name: "100% Cooperative"
     selfish_ratio: 0.0
     cooperative_ratio: 1.0
+    defensive_ratio: 0.0
     
-  - name: "50/50 Mix"
-    selfish_ratio: 0.5
-    cooperative_ratio: 0.5
+  - name: "100% Defensive"
+    selfish_ratio: 0.0
+    cooperative_ratio: 0.0
+    defensive_ratio: 1.0
+    
+  - name: "33/33/34 Mix"
+    selfish_ratio: 0.33
+    cooperative_ratio: 0.33
+    defensive_ratio: 0.34
 
 # Social law parameters
 social_laws:
@@ -148,6 +178,19 @@ social_laws:
     cooperation_speed_range: [80, 120]  # Speed range for slipstream cooperation
     lead_consistency_factor: 0.95       # Consistency in leading vehicle speed
     alternating_lead_distance: 500      # Distance before alternating lead (meters)
+  
+  # Parking-specific social laws
+  parking_assistance:
+    enabled: true
+    assistance_distance: 20.0           # Distance to detect vehicles needing parking help (meters)
+    courtesy_wait_time: 3.0             # Time to wait before providing assistance (seconds)
+    assistance_speed_factor: 0.8        # Speed reduction when providing assistance
+  
+  space_optimization:
+    enabled: true
+    optimal_spacing_factor: 1.2         # Target spacing as multiple of minimum
+    efficiency_threshold: 0.8           # Efficiency threshold for optimization
+    optimization_rate: 0.1              # Rate of position adjustment for optimization
 
 # Cooperative population overrides applied to background vehicles when composition is cooperative
 cooperative_population_overrides:

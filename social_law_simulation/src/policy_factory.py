@@ -1,8 +1,10 @@
 from policies.selfish_policy import SelfishPolicy
 from policies.cooperative_policy import CooperativePolicy
+from policies.defensive_policy import DefensivePolicy
 from policies.intersection_policy import IntersectionCooperativePolicy, IntersectionSelfishPolicy
 from policies.roundabout_policy import RoundaboutCooperativePolicy, RoundaboutSelfishPolicy
 from policies.racetrack_policy import RacetrackCooperativePolicy, RacetrackSelfishPolicy
+from policies.parking_lot_policy import ParkingLotCooperativePolicy, ParkingLotSelfishPolicy
 from policies.single_social_law_policy import (
     SingleSocialLawPolicy, SingleSocialLawIntersectionPolicy, 
     SingleSocialLawRoundaboutPolicy, SingleSocialLawRacetrackPolicy
@@ -17,6 +19,8 @@ def detect_scenario_type(scenario_name: str) -> str:
         return 'roundabout'
     if 'racetrack' in name:
         return 'racetrack'
+    if 'parking' in name or 'parking_lot' in name:
+        return 'parking_lot'
     if 'merge' in name:
         return 'merge'
     if 'highway' in name:
@@ -26,22 +30,57 @@ def detect_scenario_type(scenario_name: str) -> str:
 
 def create_agent_policy(agent_composition: dict, config: dict, scenario_type: str | None = None):
     import random as _random
-    selfish_ratio = float(agent_composition.get('selfish_ratio', 0.5))
-    # Randomly select ego type according to selfish_ratio (seeded upstream)
-    is_selfish = bool(_random.random() < selfish_ratio)
+    selfish_ratio = float(agent_composition.get('selfish_ratio', 0.33))
+    cooperative_ratio = float(agent_composition.get('cooperative_ratio', 0.33))
+    defensive_ratio = float(agent_composition.get('defensive_ratio', 0.34))
+    
+    # Randomly select ego type according to ratios (seeded upstream)
+    rand_val = _random.random()
+    if rand_val < selfish_ratio:
+        agent_type = 'selfish'
+    elif rand_val < selfish_ratio + cooperative_ratio:
+        agent_type = 'cooperative'
+    else:
+        agent_type = 'defensive'
+    
     st = (scenario_type or '').strip().lower()
 
     if st == 'intersection':
-        return (IntersectionSelfishPolicy(config) if is_selfish
-                else IntersectionCooperativePolicy(config))
+        if agent_type == 'selfish':
+            return IntersectionSelfishPolicy(config)
+        elif agent_type == 'cooperative':
+            return IntersectionCooperativePolicy(config)
+        else:  # defensive
+            return DefensivePolicy(config)
     if st == 'roundabout':
-        return (RoundaboutSelfishPolicy(config) if is_selfish
-                else RoundaboutCooperativePolicy(config))
+        if agent_type == 'selfish':
+            return RoundaboutSelfishPolicy(config)
+        elif agent_type == 'cooperative':
+            return RoundaboutCooperativePolicy(config)
+        else:  # defensive
+            return DefensivePolicy(config)
     if st == 'racetrack':
-        return (RacetrackSelfishPolicy(config) if is_selfish
-                else RacetrackCooperativePolicy(config))
+        if agent_type == 'selfish':
+            return RacetrackSelfishPolicy(config)
+        elif agent_type == 'cooperative':
+            return RacetrackCooperativePolicy(config)
+        else:  # defensive
+            return DefensivePolicy(config)
+    if st == 'parking_lot':
+        if agent_type == 'selfish':
+            return ParkingLotSelfishPolicy(config)
+        elif agent_type == 'cooperative':
+            return ParkingLotCooperativePolicy(config)
+        else:  # defensive
+            return DefensivePolicy(config)
 
-    return SelfishPolicy(config) if is_selfish else CooperativePolicy(config)
+    # Default scenarios (highway, merge)
+    if agent_type == 'selfish':
+        return SelfishPolicy(config)
+    elif agent_type == 'cooperative':
+        return CooperativePolicy(config)
+    else:  # defensive
+        return DefensivePolicy(config)
 
 
 def create_single_social_law_policy(social_law_name: str, config: dict, scenario_type: str | None = None):

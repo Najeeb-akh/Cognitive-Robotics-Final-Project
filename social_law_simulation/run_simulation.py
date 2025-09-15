@@ -24,6 +24,7 @@ from scenarios import (
     create_intersection_scenario,
     create_roundabout_scenario,
     create_racetrack_scenario,
+    create_parking_lot_scenario,
     get_scenario_configurations,
 )
 
@@ -73,6 +74,7 @@ BUILDER_MAP = {
     'intersection': create_intersection_scenario,
     'roundabout': create_roundabout_scenario,
     'racetrack': create_racetrack_scenario,
+    'parking_lot': create_parking_lot_scenario,
 }
 
 
@@ -83,18 +85,22 @@ def normalize_scenario_key(s: str) -> str:
 def comp_name_to_ratio(comp_name: str) -> dict:
     name = comp_name.strip().lower()
     if name == 'selfish':
-        return {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}
+        return {"selfish_ratio": 1.0, "cooperative_ratio": 0.0, "defensive_ratio": 0.0}
     if name == 'cooperative':
-        return {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}
+        return {"selfish_ratio": 0.0, "cooperative_ratio": 1.0, "defensive_ratio": 0.0}
+    if name == 'defensive':
+        return {"selfish_ratio": 0.0, "cooperative_ratio": 0.0, "defensive_ratio": 1.0}
+    if name == 'mixed':
+        return {"selfish_ratio": 0.33, "cooperative_ratio": 0.33, "defensive_ratio": 0.34}
     # default to mixed
-    return {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}
+    return {"selfish_ratio": 0.33, "cooperative_ratio": 0.33, "defensive_ratio": 0.34}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Unified simulation runner')
     parser.add_argument('--config', default=os.path.join(CURRENT_DIR, 'config.yaml'), help='Path to unified config file')
     parser.add_argument('--scenario', help='Scenario to run (e.g., highway, merge, intersection, roundabout, racetrack). If omitted, uses enabled scenarios from config.scenarios')
-    parser.add_argument('--composition', help='Agent composition: selfish | cooperative | mixed | all. If omitted, uses scenario-defined compositions from config.scenarios')
+    parser.add_argument('--composition', help='Agent composition: selfish | cooperative | defensive | mixed | all. If omitted, uses scenario-defined compositions from config.scenarios')
     parser.add_argument('--social-law', help='Run with specific social law (e.g., cooperative_merging, polite_yielding). Overrides composition selection and enables only the specified social law.')
     parser.add_argument('--runs', type=int, help='Number of runs per scenario-composition combination (overrides config)')
     parser.add_argument('--seed', type=int, default=0, help='Base random seed (default: 0)')
@@ -138,14 +144,14 @@ def resolve_from_config(args: argparse.Namespace, config: dict):
     for sk in scenario_keys:
         if args.composition:
             if args.composition.strip().lower() == 'all':
-                comp_names = ['selfish', 'cooperative', 'mixed']
+                comp_names = ['selfish', 'cooperative', 'defensive', 'mixed']
             else:
                 comp_names = [args.composition.strip().lower()]
         else:
             reg = (config or {}).get('scenarios', {}).get(sk, {}) if (config or {}).get('scenarios') else {}
             comp_names = [c.strip().lower() for c in reg.get('compositions', ['selfish', 'cooperative', 'mixed'])]
         for comp in comp_names:
-            if comp not in ('selfish', 'cooperative', 'mixed'):
+            if comp not in ('selfish', 'cooperative', 'defensive', 'mixed'):
                 logging.warning(f"Unknown composition '{comp}' for scenario '{sk}', skipping")
                 continue
             selections.append((sk, comp))
@@ -472,7 +478,7 @@ def main() -> None:
             composition = None  # Not used when social law is specified
         else:
             composition = comp_name_to_ratio(composition_name)
-            comp_desc = f"{int(composition['selfish_ratio']*100)}% Selfish, {int(composition['cooperative_ratio']*100)}% Cooperative"
+            comp_desc = f"{int(composition['selfish_ratio']*100)}% Selfish, {int(composition['cooperative_ratio']*100)}% Cooperative, {int(composition['defensive_ratio']*100)}% Defensive"
         
         # Run multiple instances
         for run_idx in range(runs):

@@ -301,6 +301,75 @@ def create_racetrack_scenario(config, render_mode='rgb_array'):
     return env
 
 
+def create_parking_lot_scenario(config, render_mode='rgb_array'):
+    """
+    Create Parking Lot Scenario: Complex maneuvering and space coordination
+    
+    A parking lot environment with multiple lanes, parking spaces, and complex
+    maneuvering requirements. Tests parking assistance, space optimization,
+    and courteous maneuvering behaviors.
+    
+    Args:
+        config (dict): Configuration dictionary
+        render_mode (str): Rendering mode ('human' for display, 'rgb_array' for headless)
+        
+    Returns:
+        gym.Env: Configured parking lot environment
+    """
+    # Get environment parameters from config
+    env_config = config.get('environment', {}).get('parking_lot', {})
+    
+    # Create parking lot environment with config
+    parking_config = {
+        "observation": {
+            "type": "Kinematics",
+            "vehicles_count": 15,  # Number of vehicles to observe
+            "features": ["presence", "x", "y", "vx", "vy"],
+            "features_range": {
+                "x": [-80, 80],
+                "y": [-60, 60],
+                "vx": [-15, 15],
+                "vy": [-15, 15]
+            },
+            "absolute": True,
+            "order": "sorted",
+            "see_ego": True,
+            "normalize": False  # Use physical units so policy thresholds apply
+        },
+        "action": {
+            "type": "DiscreteMetaAction",
+            "actions": ["IDLE", "LANE_LEFT", "LANE_RIGHT", "FASTER", "SLOWER"],
+        },
+        "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+        "lanes_count": env_config.get('lanes_count', 6),
+        "vehicles_count": env_config.get('vehicles_count', 30),
+        "controlled_vehicles": 1,
+        "initial_lane_id": env_config.get('initial_lane_id', None),
+        "duration": env_config.get('duration', 120),  # Longer episodes for parking
+        "collision_reward": -2,
+        "parking_reward": 1.0,
+        "efficiency_reward": 0.3,
+        "maneuvering_reward": 0.2,
+        "reward_speed_range": [5, 15],  # Lower speeds for parking lot
+        "normalize_reward": True,
+        "offroad_terminal": False,
+        # Parking-specific parameters
+        "parking_spaces": env_config.get('parking_spaces', 20),
+        "maneuvering_zone_size": env_config.get('maneuvering_zone_size', 50),
+    }
+    
+    # Create environment and configure it (prefer v1, fallback to v0)
+    try:
+        env = gym.make('parking-v1', render_mode=render_mode)
+        env.unwrapped.configure(parking_config)
+        logging.info("Created parking-v1 environment")
+    except Exception as e:
+        logging.warning(f"parking-v1 not available ({e}), using modified highway-v0")
+        env = gym.make('highway-v0', render_mode=render_mode)
+        env.unwrapped.configure(parking_config)
+    return env
+
+
 def get_scenario_configurations():
     """
     Get the standard scenario and composition configurations for FR4.
@@ -324,6 +393,9 @@ def get_scenario_configurations():
         ("Racetrack_100_Selfish", create_racetrack_scenario, {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}),
         ("Racetrack_100_Cooperative", create_racetrack_scenario, {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}),
         ("Racetrack_50_50_Mix", create_racetrack_scenario, {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}),
+        ("ParkingLot_100_Selfish", create_parking_lot_scenario, {"selfish_ratio": 1.0, "cooperative_ratio": 0.0}),
+        ("ParkingLot_100_Cooperative", create_parking_lot_scenario, {"selfish_ratio": 0.0, "cooperative_ratio": 1.0}),
+        ("ParkingLot_50_50_Mix", create_parking_lot_scenario, {"selfish_ratio": 0.5, "cooperative_ratio": 0.5}),
     ]
 
     return scenarios
