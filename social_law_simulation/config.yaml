@@ -82,6 +82,17 @@ environment:
     maneuvering_zone_size: 50   # Size of maneuvering zones
     aggressiveness: 0.8         # Selfish behavior aggressiveness
     space_claiming_distance: 15.0  # Distance to claim parking spaces
+    # Navigation and collision avoidance parameters
+    wall_detection_distance: 8.0    # Distance to detect walls (meters)
+    safe_distance_from_wall: 3.0    # Minimum safe distance from walls (meters)
+    parking_space_reward: 5.0       # Reward for reaching target parking space
+    wall_collision_penalty: -10.0   # Penalty for hitting walls
+    # Parking lot boundaries (for wall detection)
+    parking_lot_bounds:
+      x_min: -50
+      x_max: 50
+      y_min: -40
+      y_max: 40
     
   # Defensive behavior parameters
   defensive:

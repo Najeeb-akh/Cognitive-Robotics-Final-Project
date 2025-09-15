@@ -5,6 +5,7 @@ import argparse
 import logging
 from datetime import datetime
 import random
+from typing import Union
 
 import yaml
 import numpy as np
@@ -29,7 +30,7 @@ from scenarios import (
 )
 
 
-def setup_logging(log_level: str = 'INFO', log_file_path: str | None = None) -> None:
+def setup_logging(log_level: str = 'INFO', log_file_path: Union[str, None] = None) -> None:
     handlers = [logging.StreamHandler(sys.stdout)]
     if log_file_path:
         try:
@@ -51,7 +52,7 @@ def load_config(config_path: str) -> dict:
         return yaml.safe_load(f)
 
 
-def apply_overrides(base_config: dict, overrides_json: str | None) -> dict:
+def apply_overrides(base_config: dict, overrides_json: Union[str, None]) -> dict:
     if not overrides_json:
         return base_config
     overrides = json.loads(overrides_json)

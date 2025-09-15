@@ -1,3 +1,4 @@
+from typing import Union
 from policies.selfish_policy import SelfishPolicy
 from policies.cooperative_policy import CooperativePolicy
 from policies.defensive_policy import DefensivePolicy
@@ -5,6 +6,7 @@ from policies.intersection_policy import IntersectionCooperativePolicy, Intersec
 from policies.roundabout_policy import RoundaboutCooperativePolicy, RoundaboutSelfishPolicy
 from policies.racetrack_policy import RacetrackCooperativePolicy, RacetrackSelfishPolicy
 from policies.parking_lot_policy import ParkingLotCooperativePolicy, ParkingLotSelfishPolicy
+from policies.official_parking_policy import OfficialParkingCooperativePolicy, OfficialParkingSelfishPolicy
 from policies.single_social_law_policy import (
     SingleSocialLawPolicy, SingleSocialLawIntersectionPolicy, 
     SingleSocialLawRoundaboutPolicy, SingleSocialLawRacetrackPolicy
@@ -28,7 +30,7 @@ def detect_scenario_type(scenario_name: str) -> str:
     return 'highway'
 
 
-def create_agent_policy(agent_composition: dict, config: dict, scenario_type: str | None = None):
+def create_agent_policy(agent_composition: dict, config: dict, scenario_type: Union[str, None] = None):
     import random as _random
     selfish_ratio = float(agent_composition.get('selfish_ratio', 0.33))
     cooperative_ratio = float(agent_composition.get('cooperative_ratio', 0.33))
@@ -83,7 +85,7 @@ def create_agent_policy(agent_composition: dict, config: dict, scenario_type: st
         return DefensivePolicy(config)
 
 
-def create_single_social_law_policy(social_law_name: str, config: dict, scenario_type: str | None = None):
+def create_single_social_law_policy(social_law_name: str, config: dict, scenario_type: Union[str, None] = None):
     """
     Create a policy that only applies the specified social law.
     
@@ -120,7 +122,40 @@ def create_single_social_law_policy(social_law_name: str, config: dict, scenario
         return SingleSocialLawPolicy(social_law_name, config)
 
 
-def get_available_social_laws(config: dict) -> list[str]:
+def create_official_parking_policy(agent_composition: dict, config: dict):
+    """
+    Create an official parking policy based on the highway-env parking environment approach.
+    
+    Args:
+        agent_composition: Agent composition dictionary
+        config: Configuration dictionary
+        
+    Returns:
+        Official parking policy instance
+    """
+    import random as _random
+    selfish_ratio = float(agent_composition.get('selfish_ratio', 0.33))
+    cooperative_ratio = float(agent_composition.get('cooperative_ratio', 0.33))
+    defensive_ratio = float(agent_composition.get('defensive_ratio', 0.34))
+    
+    # Randomly select ego type according to ratios (seeded upstream)
+    rand_val = _random.random()
+    if rand_val < selfish_ratio:
+        agent_type = 'selfish'
+    elif rand_val < selfish_ratio + cooperative_ratio:
+        agent_type = 'cooperative'
+    else:
+        agent_type = 'defensive'
+    
+    if agent_type == 'selfish':
+        return OfficialParkingSelfishPolicy(config)
+    elif agent_type == 'cooperative':
+        return OfficialParkingCooperativePolicy(config)
+    else:  # defensive
+        return DefensivePolicy(config)
+
+
+def get_available_social_laws(config: dict) -> list:
     """
     Get list of available social laws from configuration.
     
